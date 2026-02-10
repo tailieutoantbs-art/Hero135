@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLB VUI HỌC TOÁN - TBS | Thầy Hùng (App V2.25)</title>
+    
+    <!-- LIBRARIES (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+    <!-- MathJax Configuration -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            svg: { fontCache: 'global' },
+            startup: {
+                ready: () => {
+                    MathJax.startup.defaultReady();
+                    window.isMathJaxReady = true;
+                }
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        /* GLOBAL STYLES */
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Roboto+Mono:wght@500&display=swap');
+
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.5);
+            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            --text-main: #1e293b;
+            --text-highlight: #d97706; /* Amber 600 */
+            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            --accent-color: #d97706; /* Default Accent */
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            overflow: hidden;
+            transition: background 0.5s ease;
+            background: var(--bg-gradient);
+            color: var(--text-main);
+        }
+
+        /* THEME OVERRIDES */
+        /* Dark Theme Support */
+        body.theme-ocean, body.theme-forest, body.theme-volcano, body.theme-mystic, body.theme-gold {
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            --text-main: #ffffff;
+            --text-highlight: #fcd34d; /* Yellow 300 */
+        }
+        
+        body.theme-ocean { background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); --accent-color: #06b6d4; }
+        body.theme-forest { background: linear-gradient(135deg, #134e5e, #71b280); --accent-color: #4ade80; }
+        body.theme-volcano { background: linear-gradient(135deg, #4b1248, #f0c27b); --accent-color: #fb7185; }
+        body.theme-mystic { background: linear-gradient(135deg, #2b5876, #4e4376); --accent-color: #c084fc; }
+        body.theme-gold { background: radial-gradient(circle at center, #2b2b2b 0%, #000000 100%); --accent-color: #fbbf24; }
+        
+        /* Light/Professional Theme (Default) */
+        body.theme-light {
+            background: linear-gradient(135deg, #FFFEFF 0%, #D7FFFE 100%);
+            --accent-color: #d97706;
+        }
+
+        /* GLASSMORPHISM */
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+        }
+        
+        .glass-dark {
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .glass-btn {
+            background: rgba(255, 255, 255, 0.4);
+            transition: all 0.2s ease;
+            border: 1px solid rgba(255,255,255,0.3);
+            color: var(--text-main);
+        }
+        body:not(.theme-light) .glass-btn {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+        }
+
+        .glass-btn:hover {
+            background: rgba(255, 255, 255, 0.6);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        /* ANIMATIONS */
+        @keyframes shine {
+            0% { background-position: 200% center; }
+            100% { background-position: -200% center; }
+        }
+        @keyframes sunburst {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        @keyframes glow-pulse {
+            0% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.3); }
+            50% { box-shadow: 0 0 50px rgba(255, 215, 0, 0.8), 0 0 20px rgba(255, 255, 255, 0.5); }
+            100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.3); }
+        }
+
+        .text-shine {
+            background: linear-gradient(to right, var(--text-main) 20%, var(--accent-color) 40%, var(--accent-color) 60%, var(--text-main) 80%);
+            background-size: 200% auto;
+            color: #000;
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shine 3s linear infinite;
+            font-weight: 800;
+        }
+        body:not(.theme-light) .text-shine {
+            background: linear-gradient(to right, #fff 20%, #ffd700 40%, #ffd700 60%, #fff 80%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .school-rays {
+            position: absolute;
+            top: 50%; left: 50%; width: 150vw; height: 150vw;
+            background: repeating-conic-gradient(from 0deg, rgba(0, 0, 0, 0.02) 0deg 10deg, transparent 10deg 20deg);
+            transform: translate(-50%, -50%);
+            animation: sunburst 80s linear infinite;
+            pointer-events: none; z-index: 0;
+        }
+        body:not(.theme-light) .school-rays {
+            background: repeating-conic-gradient(from 0deg, rgba(255, 255, 255, 0.03) 0deg 10deg, transparent 10deg 20deg);
+        }
+
+        .active-team {
+            border: 3px solid var(--accent-color);
+            box-shadow: 0 0 15px var(--accent-color);
+            background: rgba(255, 255, 255, 0.3) !important;
+            transform: scale(1.02);
+        }
+
+        /* MATH & TABLES STYLING */
+        .math-content table { 
+            border-collapse: collapse; 
+            width: 100%; 
+            margin: 1rem 0; 
+            font-size: 0.9em;
+            color: inherit;
+        }
+        .math-content th, .math-content td { 
+            border: 1px solid currentColor; 
+            padding: 8px; 
+            text-align: center; 
+        }
+        .math-content th { 
+            background-color: rgba(0,0,0,0.05); 
+            font-weight: bold;
+        }
+        body:not(.theme-light) .math-content th { background-color: rgba(255,255,255,0.2); }
+        
+        /* SVG Styling */
+        .math-svg svg { 
+            stroke: currentColor; 
+            fill: none; 
+            stroke-width: 2; 
+            margin: 10px auto; 
+            display: block;
+            max-width: 100%;
+        }
+        .math-svg text { 
+            fill: currentColor; 
+            stroke: none; 
+            font-size: 14px; 
+        }
+        /* User Uploaded Images */
+        .math-content img {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 8px;
+            margin: 10px auto;
+            border: 2px solid rgba(0,0,0,0.1);
+            display: block;
+        }
+
+        /* UTILS */
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 4px; }
+        body:not(.theme-light) .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.3); }
+        .json-editor { font-family: 'Roboto Mono', monospace; font-size: 12px; }
+        
+        /* Admin Form Styles */
+        .admin-label { font-size: 10px; text-transform: uppercase; color: #9ca3af; font-weight: bold; display: block; margin-bottom: 2px; }
+        .admin-input { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; padding: 4px 8px; font-size: 12px; color: white; }
+        .admin-input:focus { outline: none; border-color: #fbbf24; }
+        .radio-group label { font-size: 11px; color: white; display: flex; align-items: center; gap: 4px; cursor: pointer; }
+    </style>
+</head>
+<body class="theme-light min-h-screen flex flex-col" onclick="startAudioContext()">
+
+    <!-- AUDIO SYSTEM -->
+    <div id="audio-container" class="hidden">
+        <audio id="bgm" loop autoplay><source src="bgm.mp3" type="audio/mpeg"></audio>
+        <audio id="sfx-correct"><source src="dung.mp3" type="audio/mpeg"></audio>
+        <audio id="sfx-wrong"><source src="sai.mp3" type="audio/mpeg"></audio>
+        <audio id="sfx-click"><source src="click.mp3" type="audio/mpeg"></audio>
+    </div>
+
+    <!-- === HEADER === -->
+    <header class="glass sticky top-0 z-50 px-4 py-2 flex justify-between items-center h-16 transition-colors">
+        <div class="flex items-center gap-3">
+            <div class="h-10 w-10 rounded-full bg-white shadow-lg flex items-center justify-center overflow-hidden cursor-pointer border border-yellow-400" onclick="app.switchView('view-intro')">
+                <img src="logo.png" onerror="this.style.display='none'" class="w-full h-full object-cover">
+            </div>
+            <div>
+                <h1 id="header-title" class="font-bold text-lg md:text-xl tracking-wider" style="color: var(--accent-color)">CLB TOÁN TBS</h1>
+                <p class="text-[10px] opacity-80 uppercase tracking-widest">Interactive Game System</p>
+            </div>
+        </div>
+        
+        <div class="flex items-center gap-2">
+            <button onclick="app.switchView('view-intro')" class="glass-btn w-9 h-9 rounded-full flex items-center justify-center hover:text-blue-500" title="Trang chủ">
+                <i class="fas fa-home"></i>
+            </button>
+            <button onclick="admin.toggle()" class="glass-btn w-9 h-9 rounded-full flex items-center justify-center hover:text-gray-600" title="Quản trị/Cài đặt">
+                <i class="fas fa-cog"></i>
+            </button>
+            <button onclick="toggleMusic()" class="glass-btn w-9 h-9 rounded-full flex items-center justify-center hover:text-purple-500" title="Âm thanh">
+                <i id="icon-music" class="fas fa-volume-mute"></i>
+            </button>
+            <button onclick="openThemeModal()" class="glass-btn w-9 h-9 rounded-full flex items-center justify-center hover:text-pink-500" title="Giao diện & Màu sắc">
+                <i class="fas fa-palette"></i>
+            </button>
+             <button onclick="randomTeamPicker()" class="glass-btn w-9 h-9 rounded-full flex items-center justify-center font-bold" style="color: var(--accent-color)" title="Random">
+                <i class="fas fa-dice"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- === MAIN CONTENT === -->
+    <main class="flex-grow relative w-full h-full flex flex-col items-center justify-center overflow-hidden">
+
+        <!-- VIEW 1: INTRO -->
+        <section id="view-intro" class="w-full h-full absolute inset-0 flex flex-col items-center justify-center z-40">
+            <div class="school-rays"></div>
+            <div class="z-10 text-center animate__animated animate__zoomIn p-4">
+                
+                <div class="relative inline-block mb-8 group">
+                    <div class="absolute inset-0 bg-yellow-400 rounded-full blur-xl opacity-40 group-hover:opacity-60 transition-opacity duration-1000 animate-pulse" style="transform: scale(1.2);"></div>
+                    <div class="absolute inset-0 rounded-full border-[2px] border-dashed border-yellow-500/30 w-full h-full animate-[spin_10s_linear_infinite]" style="transform: scale(1.3);"></div>
+                    <div class="relative w-48 h-48 md:w-64 md:h-64 rounded-full border-4 border-yellow-500 bg-white shadow-[0_0_40px_rgba(255,215,0,0.6)] flex items-center justify-center overflow-hidden z-10" style="animation: glow-pulse 3s infinite;">
+                        <img src="logo.png" onerror="this.src='https://via.placeholder.com/200?text=LOGO+TBS'" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+                    </div>
+                </div>
+                
+                <h2 class="text-xl md:text-2xl font-bold uppercase tracking-widest mb-2 opacity-80">TRƯỜNG TH, THCS VÀ THPT THANH BÌNH</h2>
+                <h1 id="intro-title" class="text-4xl md:text-6xl font-extrabold text-shine mb-8 leading-tight drop-shadow-sm">TỔ TOÁN - TIN</h1>
+                
+                <div class="flex gap-4 justify-center">
+                    <button onclick="app.switchView('view-setup')" class="glass-btn px-10 py-4 text-2xl font-bold rounded-full border-2 border-yellow-500 hover:text-white shadow-lg transform hover:scale-105 transition-all" style="color: var(--accent-color); border-color: var(--accent-color)">
+                        BẮT ĐẦU <i class="fas fa-play ml-2"></i>
+                    </button>
+                    <button onclick="admin.toggle()" class="glass-btn px-6 py-4 text-xl font-bold rounded-full border border-gray-300 hover:bg-white/50">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 2: SETUP -->
+        <section id="view-setup" class="hidden w-full max-w-4xl p-4 animate__animated animate__fadeIn">
+            <div class="glass p-8 rounded-2xl relative">
+                <h2 class="text-2xl font-bold mb-6 text-center border-b border-gray-200 pb-4 uppercase" style="color: var(--accent-color)">Thiết Lập Đội Chơi</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div>
+                        <label class="text-xs uppercase font-bold opacity-60">Số đội</label>
+                        <select id="team-count" class="w-full bg-white/50 border border-gray-300 rounded p-2 mt-1 focus:border-amber-500 outline-none" style="color: var(--text-main)" onchange="app.renderTeamInputs()">
+                            <option value="2">2 Đội</option>
+                            <option value="3">3 Đội</option>
+                            <option value="4" selected>4 Đội</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-xs uppercase font-bold opacity-60">Thời gian (giây)</label>
+                        <input type="number" id="default-timer" value="30" class="w-full bg-white/50 border border-gray-300 rounded p-2 mt-1 text-center font-mono" style="color: var(--text-main)">
+                    </div>
+                </div>
+                <div id="team-names-container" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8"></div>
+                <div class="text-center">
+                    <button onclick="app.startGame()" class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-3 px-10 rounded-xl shadow-lg transform hover:scale-105 transition-all">
+                        VÀO GAME SHOW
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 3: DASHBOARD -->
+        <section id="view-dashboard" class="hidden w-full max-w-6xl p-4 animate__animated animate__fadeInUp">
+            <h2 class="text-3xl font-bold text-center mb-8 uppercase tracking-widest drop-shadow-sm">CHỌN VÒNG THI</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- R1 -->
+                <div onclick="app.selectRound(1)" class="glass p-6 rounded-2xl cursor-pointer hover:bg-white/40 transition-all group relative overflow-hidden border-t-4 border-yellow-500 shadow-lg">
+                    <div class="absolute -right-4 -top-4 opacity-10 text-9xl text-yellow-600"><i class="fas fa-list-ol"></i></div>
+                    <h3 class="text-xl font-bold mb-2" style="color: var(--accent-color)">VÒNG 1: KHỞI ĐỘNG</h3>
+                    <p class="text-sm opacity-80 mb-2" id="dash-desc-r1">Trắc nghiệm 4 đáp án (A, B, C, D)</p>
+                    <div class="text-xs bg-yellow-100 text-yellow-800 inline-block px-2 py-1 rounded font-bold">Đúng +10 / Sai -5</div>
+                </div>
+                <!-- R2 -->
+                <div onclick="app.selectRound(2)" class="glass p-6 rounded-2xl cursor-pointer hover:bg-white/40 transition-all group relative overflow-hidden border-t-4 border-blue-500 shadow-lg">
+                    <div class="absolute -right-4 -top-4 opacity-10 text-9xl text-blue-600"><i class="fas fa-check-double"></i></div>
+                    <h3 class="text-xl font-bold text-blue-600 mb-2">VÒNG 2: TĂNG TỐC</h3>
+                    <p class="text-sm opacity-80 mb-2" id="dash-desc-r2">Nhận định Đúng / Sai (a, b, c, d)</p>
+                    <div class="text-xs bg-blue-100 text-blue-800 inline-block px-2 py-1 rounded font-bold">Đúng +20 / Sai -10</div>
+                </div>
+                <!-- R3 -->
+                <div onclick="app.selectRound(3)" class="glass p-6 rounded-2xl cursor-pointer hover:bg-white/40 transition-all group relative overflow-hidden border-t-4 border-red-500 shadow-lg">
+                    <div class="absolute -right-4 -top-4 opacity-10 text-9xl text-red-600"><i class="fas fa-flag-checkered"></i></div>
+                    <h3 class="text-xl font-bold text-red-600 mb-2">VÒNG 3: VỀ ĐÍCH</h3>
+                    <p class="text-sm opacity-80 mb-2" id="dash-desc-r3">Câu hỏi ngắn & giải toán</p>
+                    <div class="text-xs bg-red-100 text-red-800 inline-block px-2 py-1 rounded font-bold">Chấm điểm thủ công</div>
+                </div>
+            </div>
+
+            <div id="dashboard-scores" class="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4"></div>
+        </section>
+
+        <!-- VIEW 4: GAMEPLAY -->
+        <section id="view-game" class="hidden w-full h-full flex flex-col p-2 md:p-4">
+            <!-- Game Top -->
+            <div class="flex justify-between items-center mb-3 h-14">
+                <button onclick="app.switchView('view-dashboard')" class="glass-btn px-4 py-2 rounded-lg text-sm flex items-center gap-2 font-bold">
+                    <i class="fas fa-arrow-left"></i> <span class="hidden md:inline">Menu</span>
+                </button>
+                
+                <div class="glass px-6 py-1 rounded-full flex items-center gap-3 border border-amber-500/30 bg-white/50">
+                    <i class="fas fa-stopwatch text-2xl" style="color: var(--accent-color)"></i>
+                    <span id="timer-display" class="text-3xl font-mono font-bold w-20 text-center" style="color: var(--text-main)">00:00</span>
+                    <div class="h-6 w-[1px] bg-gray-400"></div>
+                    <button onclick="app.toggleTimer()" class="hover:text-amber-500 text-gray-600"><i class="fas fa-play-pause"></i></button>
+                    <button onclick="app.resetTimer()" class="hover:text-red-500 text-gray-600"><i class="fas fa-redo"></i></button>
+                </div>
+
+                <div class="text-right">
+                    <span id="q-counter" class="text-xl font-bold" style="color: var(--accent-color)">1/10</span>
+                </div>
+            </div>
+
+            <!-- Game Main -->
+            <div class="flex-grow flex flex-col md:flex-row gap-4 overflow-hidden">
+                <!-- Question & Answer -->
+                <div class="w-full md:w-3/4 flex flex-col gap-4">
+                    <div class="glass p-6 rounded-2xl relative flex-grow overflow-y-auto custom-scrollbar flex flex-col justify-center min-h-[250px] shadow-sm bg-white/40">
+                         <div id="question-content" class="text-xl md:text-3xl leading-relaxed math-content font-medium" style="color: var(--text-main)"></div>
+                    </div>
+
+                    <div id="answer-area" class="h-auto min-h-[100px]"></div>
+                    
+                    <div id="solution-area" class="hidden glass-dark p-4 rounded-xl border-l-4 border-green-500 animate__animated animate__fadeInUp bg-gray-900/90 text-white">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-bold text-green-400 text-sm uppercase"><i class="fas fa-lightbulb"></i> Lời giải chi tiết</h4>
+                            <button onclick="document.getElementById('solution-area').classList.add('hidden')" class="text-xs hover:text-white opacity-50"><i class="fas fa-times"></i></button>
+                        </div>
+                        <div id="solution-content" class="text-sm md:text-base math-content opacity-90"></div>
+                    </div>
+                </div>
+
+                <!-- Controls & Score -->
+                <div class="w-full md:w-1/4 flex flex-col gap-3 min-w-[250px]">
+                    <div class="glass p-3 rounded-xl flex-grow flex flex-col overflow-hidden shadow-sm">
+                        <h3 class="text-center font-bold text-sm mb-2 opacity-70 uppercase tracking-widest border-b border-[var(--glass-border)] pb-2">Bảng Điểm</h3>
+                        <div id="game-scores" class="space-y-2 overflow-y-auto custom-scrollbar pr-1"></div>
+                    </div>
+
+                    <div class="glass p-3 rounded-xl grid grid-cols-2 gap-2 shadow-sm">
+                        <button onclick="app.showSolution()" class="col-span-2 glass-btn py-3 rounded-lg text-blue-600 font-bold uppercase tracking-wider hover:bg-blue-500 hover:text-white">
+                            <i class="fas fa-eye"></i> Hiện Lời Giải
+                        </button>
+                        <button onclick="app.prevQuestion()" class="glass-btn py-3 rounded-lg hover:bg-gray-100">
+                            <i class="fas fa-chevron-left"></i> Trước
+                        </button>
+                        <button onclick="app.nextQuestion()" class="glass-btn py-3 rounded-lg hover:bg-gray-100">
+                            Sau <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 5: ADMIN / CONFIG (Dark theme for admin always) -->
+        <section id="view-admin" class="hidden w-full h-full absolute inset-0 z-50 bg-[#121212] text-gray-200 flex flex-col">
+            <div class="flex justify-between items-center p-4 border-b border-gray-700 bg-[#1a1a1a]">
+                <h2 class="text-xl font-bold text-yellow-400"><i class="fas fa-cogs"></i> QUẢN TRỊ VIÊN & SOẠN BÀI</h2>
+                <div class="flex gap-2">
+                     <button onclick="admin.autoFix()" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded font-bold text-sm">
+                        <i class="fas fa-magic"></i> SỬA LỖI
+                    </button>
+                    <button onclick="admin.save()" class="bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded font-bold text-sm">
+                        <i class="fas fa-save"></i> LƯU & ÁP DỤNG
+                    </button>
+                    <button onclick="admin.close()" class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded text-sm">
+                        ĐÓNG
+                    </button>
+                </div>
+            </div>
+            
+            <div class="flex-grow flex flex-col md:flex-row overflow-hidden">
+                <!-- Sidebar: Prompt Generator -->
+                <div class="w-full md:w-1/3 p-4 bg-[#1a1a1a] overflow-y-auto border-r border-gray-700 custom-scrollbar">
+                    <h3 class="font-bold text-blue-400 mb-3 uppercase tracking-wider text-sm"><i class="fas fa-magic"></i> Bộ Tạo Prompt (AI)</h3>
+                    
+                    <!-- Topic -->
+                    <div class="mb-4">
+                        <label class="admin-label">Chủ đề bài giảng</label>
+                        <input type="text" id="p-topic" class="admin-input" placeholder="VD: Tích phân từng phần, Hàm số...">
+                    </div>
+
+                    <!-- Source Selection -->
+                    <div class="mb-4">
+                        <label class="admin-label text-green-400">Nguồn dữ liệu</label>
+                        <div class="radio-group flex flex-col gap-2 mt-1">
+                            <label>
+                                <input type="radio" name="p-source" value="ai" checked> 
+                                AI tự sáng tạo nội dung (Mặc định)
+                            </label>
+                            <label>
+                                <input type="radio" name="p-source" value="file"> 
+                                Dựa trên tài liệu đính kèm (PDF/Ảnh)
+                            </label>
+                        </div>
+                        <p class="text-[10px] text-gray-500 mt-2 italic border-l-2 border-green-500 pl-2">
+                            * Lưu ý: Khi dùng file, hãy cài đặt Số lượng & Loại câu bên dưới để AI biết cách trích xuất/chuyển đổi phù hợp.
+                        </p>
+                    </div>
+
+                    <!-- Round 1 Config -->
+                    <div class="mb-4 bg-white/5 p-3 rounded border border-white/10">
+                        <div class="text-yellow-300 font-bold text-xs mb-2">CẤU HÌNH VÒNG 1</div>
+                        <div class="grid grid-cols-2 gap-2 mb-2">
+                            <div>
+                                <label class="admin-label">Loại câu hỏi</label>
+                                <select id="p-r1-type" class="admin-input">
+                                    <option value="MCQ" selected>Trắc nghiệm (MCQ)</option>
+                                    <option value="TF">Đúng / Sai</option>
+                                    <option value="SA">Tự luận ngắn</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="admin-label">Số lượng</label>
+                                <input type="number" id="p-r1-count" class="admin-input" value="10" min="1">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="admin-label">Mức độ</label>
+                            <select id="p-r1-diff" class="admin-input">
+                                <option value="Dễ (Nhận biết/Thông hiểu)">Dễ</option>
+                                <option value="Trung Bình (Vận dụng)" selected>Trung Bình</option>
+                                <option value="Khó (Vận dụng cao)">Khó</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Round 2 Config -->
+                    <div class="mb-4 bg-white/5 p-3 rounded border border-white/10">
+                        <div class="text-blue-300 font-bold text-xs mb-2">CẤU HÌNH VÒNG 2</div>
+                        <div class="grid grid-cols-2 gap-2 mb-2">
+                            <div>
+                                <label class="admin-label">Loại câu hỏi</label>
+                                <select id="p-r2-type" class="admin-input">
+                                    <option value="MCQ">Trắc nghiệm</option>
+                                    <option value="TF" selected>Đúng / Sai</option>
+                                    <option value="SA">Tự luận ngắn</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="admin-label">Số lượng</label>
+                                <input type="number" id="p-r2-count" class="admin-input" value="5" min="1">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="admin-label">Mức độ</label>
+                            <select id="p-r2-diff" class="admin-input">
+                                <option value="Dễ">Dễ</option>
+                                <option value="Trung Bình" selected>Trung Bình</option>
+                                <option value="Khó">Khó</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Round 3 Config -->
+                    <div class="mb-4 bg-white/5 p-3 rounded border border-white/10">
+                        <div class="text-red-300 font-bold text-xs mb-2">CẤU HÌNH VÒNG 3</div>
+                        <div class="grid grid-cols-2 gap-2 mb-2">
+                            <div>
+                                <label class="admin-label">Loại câu hỏi</label>
+                                <select id="p-r3-type" class="admin-input">
+                                    <option value="MCQ">Trắc nghiệm</option>
+                                    <option value="TF">Đúng / Sai</option>
+                                    <option value="SA" selected>Tự luận ngắn</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="admin-label">Số lượng</label>
+                                <input type="number" id="p-r3-count" class="admin-input" value="5" min="1">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="admin-label">Mức độ</label>
+                            <select id="p-r3-diff" class="admin-input">
+                                <option value="Dễ">Dễ</option>
+                                <option value="Trung Bình">Trung Bình</option>
+                                <option value="Khó" selected>Khó</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button onclick="admin.generateAndCopyPrompt()" class="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white font-bold py-3 rounded-lg shadow-lg mb-6 flex items-center justify-center gap-2">
+                        <i class="fas fa-magic"></i> TẠO & COPY PROMPT
+                    </button>
+                    
+                    <div class="border-t border-gray-700 pt-4">
+                        <h3 class="font-bold text-gray-400 mb-2 text-xs uppercase">Công cụ chèn ảnh</h3>
+                        <!-- Image Upload Tool -->
+                        <div class="bg-gray-800 p-2 rounded mb-4 border border-gray-600">
+                            <label for="img-tool-input" class="block text-[10px] text-gray-400 mb-1 cursor-pointer hover:text-white">
+                                1. Chọn ảnh từ máy <i class="fas fa-upload"></i>
+                            </label>
+                            <input type="file" id="img-tool-input" class="w-full text-xs text-gray-300 mb-2" accept="image/*" onchange="admin.handleImageTool(this)">
+                            
+                            <label class="block text-[10px] text-gray-400 mb-1">2. Mã ảnh (Copy dòng này dán vào JSON)</label>
+                            <textarea id="img-tool-output" class="w-full h-16 bg-black text-green-400 text-[10px] p-1 rounded resize-none focus:outline-none focus:border-green-500 border border-gray-700" readonly placeholder="Mã ảnh sẽ hiện ở đây..."></textarea>
+                            <button onclick="admin.copyImageCode()" class="w-full bg-gray-700 hover:bg-gray-600 text-white text-xs py-1 rounded mt-1">Copy Mã Ảnh</button>
+                        </div>
+
+                        <h3 class="font-bold text-gray-400 mb-2 text-xs uppercase">Công cụ khác</h3>
+                        <button onclick="admin.resetDefault()" class="w-full text-left px-3 py-2 text-xs bg-red-900/30 hover:bg-red-900/50 rounded mb-2 text-red-200">
+                            <i class="fas fa-trash"></i> Reset về dữ liệu gốc
+                        </button>
+                        
+                        <div class="flex gap-2 mt-2">
+                            <!-- New: Export HTML with Data -->
+                            <button onclick="admin.exportHTML()" class="w-1/2 text-left px-3 py-2 text-xs bg-pink-600/30 hover:bg-pink-600/50 rounded text-pink-200" title="Xuất file game trọn gói để gửi học sinh">
+                                <i class="fas fa-gift"></i> Xuất Game (.html)
+                            </button>
+                            
+                            <button onclick="admin.exportData()" class="w-1/2 text-left px-3 py-2 text-xs bg-blue-900/30 hover:bg-blue-900/50 rounded text-blue-200" title="Lưu cấu hình JSON">
+                                <i class="fas fa-download"></i> Lưu file JSON
+                            </button>
+                        </div>
+                        <div class="mt-2">
+                             <button onclick="document.getElementById('file-upload').click()" class="w-full text-left px-3 py-2 text-xs bg-amber-700/30 hover:bg-amber-700/50 rounded text-amber-200">
+                                <i class="fas fa-folder-open"></i> Mở file JSON có sẵn
+                            </button>
+                            <input type="file" id="file-upload" class="hidden" accept=".json" onchange="admin.importData(this)">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Editor -->
+                <div class="w-full md:w-2/3 flex flex-col bg-[#0f0f0f]">
+                    <div class="p-2 bg-[#1a1a1a] text-xs text-gray-400 flex justify-between">
+                        <span>Dữ liệu trò chơi (JSON) - Dán kết quả từ AI vào đây</span>
+                        <span id="json-status" class="text-green-500">Ready</span>
+                    </div>
+                    <textarea id="json-input" class="flex-grow w-full bg-[#0f0f0f] text-gray-300 p-4 font-mono text-sm outline-none resize-none" spellcheck="false" placeholder="// Dán mã JSON từ ChatGPT/Gemini vào đây..."></textarea>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- MODAL THEME & COLOR CUSTOMIZER -->
+    <div id="modal-theme" class="fixed inset-0 bg-black/80 hidden z-[60] flex items-center justify-center">
+        <div class="glass bg-[#1a1a1a] p-6 rounded-2xl w-full max-w-sm mx-4 text-white">
+            <h3 class="text-xl font-bold mb-4 flex justify-between">
+                <span>Giao Diện & Màu Sắc</span>
+                <button onclick="document.getElementById('modal-theme').classList.add('hidden')" class="text-sm opacity-60 hover:opacity-100"><i class="fas fa-times"></i></button>
+            </h3>
+            
+            <!-- Color Customizer -->
+            <div class="mb-4 bg-white/10 p-3 rounded-lg">
+                <h4 class="text-xs font-bold uppercase text-gray-400 mb-2">TÙY CHỈNH MÀU SẮC</h4>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-[10px] block mb-1">Màu Văn Bản Chính</label>
+                        <div class="flex gap-2 items-center">
+                            <input type="color" id="picker-text" class="w-8 h-8 rounded cursor-pointer border-none bg-transparent" oninput="app.setCustomColor('--text-main', this.value)">
+                            <span class="text-xs opacity-70">Chọn màu</span>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="text-[10px] block mb-1">Màu Nổi Bật (Tiêu đề/Nút)</label>
+                        <div class="flex gap-2 items-center">
+                            <input type="color" id="picker-accent" class="w-8 h-8 rounded cursor-pointer border-none bg-transparent" oninput="app.setCustomColor('--accent-color', this.value)">
+                            <span class="text-xs opacity-70">Chọn màu</span>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="app.resetCustomColors()" class="w-full mt-3 py-1.5 text-xs bg-gray-600 hover:bg-gray-500 rounded text-gray-200">
+                    <i class="fas fa-undo"></i> Khôi phục mặc định
+                </button>
+            </div>
+
+            <!-- Theme Presets -->
+            <h4 class="text-xs font-bold uppercase text-gray-400 mb-2">CHỦ ĐỀ CÓ SẴN</h4>
+            <div class="grid grid-cols-1 gap-2 max-h-[200px] overflow-y-auto custom-scrollbar pr-1">
+                <button onclick="changeTheme('theme-light')" class="p-3 rounded text-left hover:bg-white/10 border-l-4 border-gray-200 bg-white text-black font-bold">✨ Light Professional (Sáng)</button>
+                <button onclick="changeTheme('theme-ocean')" class="p-3 rounded text-left hover:bg-white/10 border-l-4 border-blue-500 text-blue-300 bg-slate-800">🌊 Midnight Ocean (Tối)</button>
+                <button onclick="changeTheme('theme-forest')" class="p-3 rounded text-left hover:bg-white/10 border-l-4 border-green-500 text-green-300 bg-slate-800">🌲 Forest Zen (Tối)</button>
+                <button onclick="changeTheme('theme-volcano')" class="p-3 rounded text-left hover:bg-white/10 border-l-4 border-red-500 text-red-300 bg-slate-800">🌋 Sunset Vibes (Tối)</button>
+                <button onclick="changeTheme('theme-gold')" class="p-3 rounded text-left hover:bg-white/10 border-l-4 border-yellow-500 text-yellow-300 bg-slate-800">🏆 Luxury Gold (Tối)</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // === GAME DATA BLOCK (DO NOT REMOVE COMMENTS) ===
+        const DEFAULT_DATA = {
+            title: "TỔ TOÁN - TIN",
+            round1: [
+                { id: 1, type: "MCQ", question: "Cho hàm số $y=x^3-3x+1$. Giá trị cực đại của hàm số bằng:", options: ["1", "3", "-1", "2"], correct: 1, solution: "Ta có $y' = 3x^2 - 3$. $y'=0 \\Leftrightarrow x=\\pm 1$.<br>BBT cho thấy cực đại tại $x=-1$, giá trị $y(-1) = -1+3+1 = 3$." },
+                { id: 2, type: "MCQ", question: "Thể tích khối cầu bán kính $R$ là:", options: ["$V=\\frac{4}{3}\\pi R^3$", "$V=4\\pi R^3$", "$V=\\pi R^3$", "$V=\\frac{1}{3}\\pi R^3$"], correct: 0, solution: "Công thức thể tích khối cầu là $V = \\frac{4}{3}\\pi R^3$." }
+            ],
+            round2: [
+                { id: 1, type: "TF", question: "Cho hình lập phương $ABCD.A'B'C'D'$.", propositions: [{text: "Góc giữa $AC$ và $B'D'$ bằng $90^\\circ$.", isTrue: true}, {text: "$AA' \\perp (ABCD)$.", isTrue: true}, {text: "Khoảng cách giữa $AA'$ và $BD$ bằng $a\\sqrt{2}$.", isTrue: false}], solution: "1. Đúng vì $AC \\perp BD$ và $BD // B'D'$.<br>2. Đúng theo định nghĩa.<br>3. Sai, khoảng cách là $AO = \\frac{a\\sqrt{2}}{2}$." }
+            ],
+            round3: [
+                { id: 1, type: "SA", question: "Tìm nguyên hàm $F(x)$ của $f(x) = 2x + 1$ biết $F(1) = 3$.", answer: "x^2 + x + 1", solution: "$F(x) = \\int (2x+1)dx = x^2 + x + C$.<br>Vì $F(1)=3 \\Rightarrow 1+1+C=3 \\Rightarrow C=1$.<br>Vậy $F(x)=x^2+x+1$." }
+            ]
+        };
+        // === END GAME DATA BLOCK ===
+
+        // === APP CORE ===
+        let GAME_DATA = JSON.parse(JSON.stringify(DEFAULT_DATA)); // Deep copy
+
+        const app = {
+            state: {
+                currentRound: 0,
+                qIndex: 0,
+                teams: [],
+                activeTeam: null,
+                timer: null,
+                timeLeft: 30,
+                defaultTime: 30
+            },
+            
+            init: function() {
+                // Load Data from LocalStorage
+                const savedData = localStorage.getItem('TBS_GAME_DATA');
+                if(savedData) {
+                    try {
+                        GAME_DATA = JSON.parse(savedData);
+                        console.log("Loaded saved data");
+                    } catch(e) {
+                        console.error("Save data corrupted, using default");
+                    }
+                }
+                
+                // Load Title - Keep "CLB TOÁN TBS" fixed on header, only change intro title
+                document.getElementById('intro-title').innerText = GAME_DATA.title || "TỔ TOÁN - TIN";
+                
+                this.renderTeamInputs();
+                this.setupAudio();
+            },
+
+            setupAudio: function() {
+                this.sounds = {
+                    bgm: document.getElementById('bgm'),
+                    correct: document.getElementById('sfx-correct'),
+                    wrong: document.getElementById('sfx-wrong'),
+                    click: document.getElementById('sfx-click')
+                };
+                if(this.sounds.bgm) this.sounds.bgm.volume = 0.4;
+            },
+
+            playSound: function(name) {
+                try {
+                    const sound = this.sounds[name];
+                    if(sound) {
+                        sound.currentTime = 0;
+                        sound.play().catch(()=>{});
+                    }
+                } catch(e){}
+            },
+
+            switchView: function(viewId) {
+                this.playSound('click');
+                document.querySelectorAll('section').forEach(el => el.classList.add('hidden'));
+                document.getElementById(viewId).classList.remove('hidden');
+                
+                if(viewId === 'view-game') this.renderGame();
+                if(viewId === 'view-dashboard') this.renderDashScores();
+            },
+
+            // --- COLOR CUSTOMIZER FUNCTIONS ---
+            setCustomColor: function(variable, color) {
+                document.documentElement.style.setProperty(variable, color);
+            },
+            
+            resetCustomColors: function() {
+                document.documentElement.style.removeProperty('--text-main');
+                document.documentElement.style.removeProperty('--accent-color');
+                // Reset pickers visually (optional, hard to guess default of current theme)
+            },
+
+            // --- SETUP ---
+            renderTeamInputs: function() {
+                const count = parseInt(document.getElementById('team-count').value);
+                const container = document.getElementById('team-names-container');
+                container.innerHTML = '';
+                for(let i=1; i<=count; i++) {
+                    container.innerHTML += `
+                        <div class="group">
+                            <label class="text-[10px] uppercase font-bold opacity-60">Tên Đội ${i}</label>
+                            <input type="text" id="team-name-${i}" value="Đội ${i}" class="w-full bg-white/50 border border-gray-300 rounded-lg p-3 font-bold focus:ring-2 focus:ring-[var(--accent-color)] outline-none" style="color: var(--text-main)">
+                        </div>
+                    `;
+                }
+            },
+
+            startGame: function() {
+                const count = parseInt(document.getElementById('team-count').value);
+                this.state.defaultTime = parseInt(document.getElementById('default-timer').value) || 30;
+                this.state.teams = [];
+                for(let i=1; i<=count; i++) {
+                    const name = document.getElementById(`team-name-${i}`).value;
+                    this.state.teams.push({ name: name, score: 0 });
+                }
+                this.switchView('view-dashboard');
+                // Ensure music plays on start
+                toggleMusic(true);
+            },
+
+            // --- GAME LOGIC ---
+            selectRound: function(r) {
+                this.state.currentRound = r;
+                this.state.qIndex = 0;
+                this.state.activeTeam = null;
+                this.switchView('view-game');
+            },
+
+            renderGame: function() {
+                // Reset UI
+                this.resetTimer();
+                document.getElementById('solution-area').classList.add('hidden');
+                document.getElementById('solution-content').innerHTML = '';
+                
+                // Get Data
+                let roundKey = `round${this.state.currentRound}`;
+                let list = GAME_DATA[roundKey] || [];
+                
+                if(list.length === 0) {
+                    Toastify({text: "Chưa có câu hỏi cho vòng này!", backgroundColor: "red"}).showToast();
+                    return;
+                }
+
+                if(this.state.qIndex < 0) this.state.qIndex = 0;
+                if(this.state.qIndex >= list.length) this.state.qIndex = list.length - 1;
+
+                const q = list[this.state.qIndex];
+                
+                // Update Text
+                document.getElementById('q-counter').innerText = `${this.state.qIndex + 1}/${list.length}`;
+                document.getElementById('question-content').innerHTML = q.question;
+
+                // Render Answer Options
+                const area = document.getElementById('answer-area');
+                area.innerHTML = '';
+
+                if(q.type === 'MCQ') {
+                    const grid = document.createElement('div');
+                    grid.className = 'grid grid-cols-1 md:grid-cols-2 gap-3 mt-4';
+                    q.options.forEach((opt, idx) => {
+                        const btn = document.createElement('button');
+                        btn.className = 'glass-btn p-4 rounded-xl text-left flex items-center hover:bg-[var(--accent-color)]/10 transition-all';
+                        btn.style.color = "var(--text-main)"; // Explicitly set dynamic color
+                        btn.innerHTML = `<span class="bg-[var(--accent-color)] text-white font-bold w-8 h-8 rounded-full flex items-center justify-center mr-3 shrink-0">${String.fromCharCode(65+idx)}</span> <div class="math-content font-medium">${opt}</div>`;
+                        btn.onclick = () => this.checkMCQ(idx);
+                        grid.appendChild(btn);
+                    });
+                    area.appendChild(grid);
+                } else if (q.type === 'TF') {
+                    const col = document.createElement('div');
+                    col.className = 'flex flex-col gap-2 mt-4';
+                    q.propositions.forEach((prop, idx) => {
+                        const row = document.createElement('div');
+                        row.className = 'glass p-3 rounded-lg flex justify-between items-center';
+                        row.style.color = "var(--text-main)";
+                        row.innerHTML = `<div class="flex-grow mr-4 math-content font-medium"><b style="color:var(--accent-color)">(${String.fromCharCode(97+idx)})</b> ${prop.text}</div>
+                        <div class="flex gap-2 shrink-0">
+                            <button onclick="app.checkTF(${idx}, true)" class="bg-green-600 hover:bg-green-500 text-white px-3 py-1 rounded text-sm font-bold shadow">Đ</button>
+                            <button onclick="app.checkTF(${idx}, false)" class="bg-red-600 hover:bg-red-500 text-white px-3 py-1 rounded text-sm font-bold shadow">S</button>
+                        </div>`;
+                        col.appendChild(row);
+                    });
+                    area.appendChild(col);
+                } else {
+                    area.innerHTML = `<div class="mt-6 flex flex-col items-center">
+                        <div id="r3-answer-box" class="hidden text-2xl font-bold mb-4 animate__animated animate__pulse animate__infinite" style="color:var(--accent-color)">ĐÁP ÁN: ${q.answer}</div>
+                        <button id="btn-reveal-r3" onclick="document.getElementById('r3-answer-box').classList.remove('hidden'); this.classList.add('hidden');" class="mb-4 glass-btn px-6 py-2 rounded-full font-bold border border-[var(--accent-color)] hover:bg-[var(--accent-color)] hover:text-white transition-all" style="color:var(--accent-color)">
+                            <i class="fas fa-eye"></i> HIỆN ĐÁP ÁN
+                        </button>
+                        <div class="flex gap-4">
+                            <button onclick="app.manualScore(30)" class="bg-green-600 hover:bg-green-500 px-6 py-2 rounded-full font-bold text-white shadow-lg">Đúng (+30)</button>
+                            <button onclick="app.manualScore(-15)" class="bg-red-600 hover:bg-red-500 px-6 py-2 rounded-full font-bold text-white shadow-lg">Sai (-15)</button>
+                        </div>
+                    </div>`;
+                }
+
+                this.renderGameScores();
+                if(window.MathJax) MathJax.typesetPromise();
+            },
+
+            // --- HELPER FOR TEAM COLORS ---
+            getTeamColorClass: function(index) {
+                // Returns color classes based on team index
+                // Index 0: Blue, 1: Red, 2: Green, 3: Yellow/Purple
+                const styles = [
+                    { border: 'border-blue-500', text: 'text-blue-700', bg: 'bg-blue-100', icon: 'bg-blue-500' },
+                    { border: 'border-red-500', text: 'text-red-700', bg: 'bg-red-100', icon: 'bg-red-500' },
+                    { border: 'border-green-500', text: 'text-green-700', bg: 'bg-green-100', icon: 'bg-green-500' },
+                    { border: 'border-yellow-500', text: 'text-yellow-700', bg: 'bg-yellow-100', icon: 'bg-yellow-500' }
+                ];
+                return styles[index % styles.length];
+            },
+
+            renderGameScores: function() {
+                const con = document.getElementById('game-scores');
+                con.innerHTML = '';
+                this.state.teams.forEach((t, i) => {
+                    const active = i === this.state.activeTeam;
+                    const style = this.getTeamColorClass(i);
+                    
+                    // Active card gets a strong border and glow. Inactive gets a subtle side border.
+                    const activeClass = active 
+                        ? `border-2 ${style.border} shadow-[0_0_15px_rgba(0,0,0,0.2)] scale-105 bg-white/90` 
+                        : `hover:bg-white/50 border-l-4 ${style.border} opacity-80 hover:opacity-100`;
+
+                    con.innerHTML += `
+                        <div onclick="app.setActiveTeam(${i})" class="glass p-3 rounded-lg cursor-pointer flex justify-between items-center transition-all duration-300 mb-2 ${activeClass}">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-full ${style.icon} text-white flex items-center justify-center font-bold text-xs shadow-sm">
+                                    ${t.name.charAt(0).toUpperCase()}
+                                </div>
+                                <div class="font-bold text-sm" style="color: var(--text-main)">${t.name}</div>
+                            </div>
+                            <div class="text-xl font-mono font-bold ${style.text}">${t.score}</div>
+                        </div>
+                    `;
+                });
+            },
+
+            setActiveTeam: function(i) {
+                this.state.activeTeam = i;
+                this.playSound('click');
+                this.renderGameScores();
+            },
+
+            // --- CHECKING LOGIC ---
+            checkMCQ: function(idx) {
+                if(this.state.activeTeam === null) return this.notify("Chọn đội trả lời trước!", "red");
+                const q = GAME_DATA[`round${this.state.currentRound}`][this.state.qIndex];
+                const team = this.state.teams[this.state.activeTeam];
+                
+                if(idx === q.correct) {
+                    team.score += 10;
+                    this.playSound('correct');
+                    this.celebrate();
+                    this.notify(`${team.name} +10 điểm`, "green");
+                } else {
+                    team.score -= 5;
+                    this.playSound('wrong');
+                    this.notify(`${team.name} -5 điểm`, "red");
+                }
+                this.renderGameScores();
+            },
+
+            checkTF: function(propIdx, choice) {
+                if(this.state.activeTeam === null) return this.notify("Chọn đội trả lời trước!", "red");
+                const q = GAME_DATA[`round${this.state.currentRound}`][this.state.qIndex];
+                const team = this.state.teams[this.state.activeTeam];
+                
+                if(choice === q.propositions[propIdx].isTrue) {
+                    team.score += 20;
+                    this.playSound('correct');
+                    this.celebrate();
+                    this.notify("Chính xác! +20", "green");
+                } else {
+                    team.score -= 10;
+                    this.playSound('wrong');
+                    this.notify("Sai rồi! -10", "red");
+                }
+                this.renderGameScores();
+            },
+
+            manualScore: function(pts) {
+                if(this.state.activeTeam === null) return this.notify("Chọn đội!", "red");
+                this.state.teams[this.state.activeTeam].score += pts;
+                if(pts > 0) { this.playSound('correct'); this.celebrate(); }
+                else this.playSound('wrong');
+                this.renderGameScores();
+            },
+
+            // --- UTILS ---
+            notify: function(msg, color) {
+                Toastify({ text: msg, backgroundColor: color === "green" ? "#10B981" : "#EF4444", duration: 2000, gravity: "top" }).showToast();
+            },
+            
+            celebrate: function() {
+                confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+            },
+
+            nextQuestion: function() { this.state.qIndex++; this.renderGame(); },
+            prevQuestion: function() { this.state.qIndex--; this.renderGame(); },
+            
+            showSolution: function() {
+                const q = GAME_DATA[`round${this.state.currentRound}`][this.state.qIndex];
+                document.getElementById('solution-content').innerHTML = q.solution || "Không có giải chi tiết.";
+                document.getElementById('solution-area').classList.remove('hidden');
+                if(window.MathJax) MathJax.typesetPromise();
+            },
+
+            toggleTimer: function() {
+                if(this.state.timer) { clearInterval(this.state.timer); this.state.timer = null; }
+                else {
+                    this.state.timer = setInterval(() => {
+                        this.state.timeLeft--;
+                        document.getElementById('timer-display').innerText = this.formatTime(this.state.timeLeft);
+                        if(this.state.timeLeft <= 0) {
+                            clearInterval(this.state.timer);
+                            this.playSound('wrong');
+                            this.notify("HẾT GIỜ!", "red");
+                        }
+                    }, 1000);
+                }
+            },
+            
+            resetTimer: function() {
+                if(this.state.timer) clearInterval(this.state.timer);
+                this.state.timer = null;
+                this.state.timeLeft = this.state.defaultTime;
+                document.getElementById('timer-display').innerText = this.formatTime(this.state.timeLeft);
+            },
+            
+            formatTime: s => (s<10?'0':'') + s + ':00'.replace(':00',''),
+
+            renderDashScores: function() {
+                const c = document.getElementById('dashboard-scores');
+                c.innerHTML = '';
+                [...this.state.teams].sort((a,b)=>b.score - a.score).forEach((t, i) => {
+                    // Use the same helper for consistency but adapt for dashboard cards
+                    const style = this.getTeamColorClass(this.state.teams.indexOf(t)); 
+                    // Note: indexOf helps keep consistent color per team name if unique, else random
+                    // Just reusing index i for leaderboard colors might be better visually
+                    
+                    let rankColor = i===0 ? "text-yellow-500" : (i===1 ? "text-gray-400" : (i===2 ? "text-amber-700" : "text-slate-400"));
+                    
+                    c.innerHTML += `<div class="glass p-4 rounded-xl flex flex-col items-center transform hover:scale-105 transition-all">
+                        <i class="fas fa-trophy ${rankColor} text-3xl mb-2 drop-shadow-md"></i>
+                        <span class="font-bold text-lg" style="color: var(--text-main)">${t.name}</span>
+                        <span class="text-3xl font-mono font-extrabold ${style.text}">${t.score}</span>
+                    </div>`;
+                });
+            }
+        };
+
+        // === ADMIN SYSTEM (Simplified for length) ===
+        const admin = {
+            toggle: function() {
+                const view = document.getElementById('view-admin');
+                if(view.classList.contains('hidden')) {
+                    view.classList.remove('hidden');
+                    document.getElementById('json-input').value = JSON.stringify(GAME_DATA, null, 2);
+                } else {
+                    view.classList.add('hidden');
+                }
+            },
+            close: function() { document.getElementById('view-admin').classList.add('hidden'); },
+            save: function() {
+                const inputEl = document.getElementById('json-input');
+                let raw = inputEl.value.trim();
+                if (!raw) return Toastify({ text: "Lỗi: Trống!", backgroundColor: "#EF4444" }).showToast();
+                if (raw.includes("```")) raw = raw.replace(/```json/g, "").replace(/```/g, "").trim();
+                const firstBrace = raw.indexOf('{');
+                const lastBrace = raw.lastIndexOf('}');
+                if(firstBrace !== -1 && lastBrace !== -1) raw = raw.substring(firstBrace, lastBrace + 1);
+                raw = raw.replace(/[\u201C\u201D]/g, '"').replace(/,\s*}/g, '}').replace(/,\s*]/g, ']');
+                try {
+                    let parsed = JSON.parse(raw);
+                    if(!parsed.title) throw new Error("Thiếu title");
+                    GAME_DATA = parsed;
+                    localStorage.setItem('TBS_GAME_DATA', JSON.stringify(GAME_DATA));
+                    if(document.getElementById('intro-title')) document.getElementById('intro-title').innerText = GAME_DATA.title;
+                    app.init();
+                    Toastify({ text: "✅ Đã lưu!", backgroundColor: "#10B981" }).showToast();
+                    this.close();
+                } catch(e) {
+                    Toastify({ text: "❌ Lỗi: " + e.message, backgroundColor: "#EF4444" }).showToast();
+                }
+            },
+            autoFix: function() {
+                const inputEl = document.getElementById('json-input');
+                let raw = inputEl.value.trim();
+                
+                if (!raw) return Toastify({text: "Không có nội dung để sửa!", backgroundColor: "#f59e0b"}).showToast();
+
+                // 1. Remove Markdown
+                if (raw.includes("```")) raw = raw.replace(/```json/g, "").replace(/```/g, "").trim();
+                
+                // 2. Extract JSON part
+                const firstBrace = raw.indexOf('{');
+                const lastBrace = raw.lastIndexOf('}');
+                if(firstBrace !== -1 && lastBrace !== -1) {
+                    raw = raw.substring(firstBrace, lastBrace + 1);
+                }
+
+                // 3. Fix common syntax errors text-based
+                // Smart quotes to straight quotes
+                raw = raw.replace(/[\u201C\u201D]/g, '"'); 
+                
+                // Try to parse liberally using Function constructor (eval)
+                try {
+                    // This allows keys without quotes, single quotes, trailing commas, etc.
+                    const fixedObj = new Function("return " + raw)();
+                    
+                    // Convert back to standard JSON
+                    const formatted = JSON.stringify(fixedObj, null, 2);
+                    inputEl.value = formatted;
+                    
+                    Toastify({text: "✅ Đã sửa lỗi và định dạng lại!", backgroundColor: "#10B981"}).showToast();
+                } catch (e) {
+                    console.error("AutoFix Failed:", e);
+                    // Cố gắng báo lỗi chi tiết
+                    let msg = "Không thể tự sửa. ";
+                    if(e.message.includes("Unexpected string")) msg += "Lỗi: Thiếu dấu phẩy (,) hoặc xuống dòng sai chỗ.";
+                    else if(e.message.includes("Unexpected token")) msg += "Lỗi: Ký tự lạ hoặc cấu trúc sai.";
+                    else msg += e.message;
+
+                    Toastify({text: msg, backgroundColor: "#EF4444", duration: 5000}).showToast();
+                }
+            },
+            exportHTML: function() {
+                let html = document.documentElement.outerHTML;
+                const data = JSON.stringify(GAME_DATA, null, 4);
+                const regex = /(\/\/ === GAME DATA BLOCK \(DO NOT REMOVE COMMENTS\) ===)[\s\S]*?(\/\/ === END GAME DATA BLOCK ===)/;
+                if(regex.test(html)) {
+                    html = html.replace(regex, `$1\n        const DEFAULT_DATA = ${data};\n        $2`);
+                    const blob = new Blob([html], {type: 'text/html'});
+                    const a = document.createElement('a');
+                    a.href = URL.createObjectURL(blob);
+                    a.download = `Game_${GAME_DATA.title.replace(/\s+/g,'_')}.html`;
+                    a.click();
+                }
+            },
+            handleImageTool: function(input) {
+                const file = input.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('img-tool-output').value = `<img src='${e.target.result}' alt='Img'>`;
+                    Toastify({text: "✅ Xong!", backgroundColor: "#10B981"}).showToast();
+                };
+                reader.readAsDataURL(file);
+            },
+            copyImageCode: function() {
+                const el = document.getElementById("img-tool-output");
+                el.select(); document.execCommand('copy');
+                Toastify({text: "Đã copy mã ảnh!", backgroundColor: "#3b82f6"}).showToast();
+            },
+            generateAndCopyPrompt: function() {
+                const topic = document.getElementById('p-topic').value || "Chủ đề";
+                const p = `Hãy đóng vai chuyên gia giáo dục. Tạo JSON cho game chủ đề "${topic}". Cấu trúc: { "title": "${topic}", "round1": [...], "round2": [...], "round3": [...] }. Dùng LaTeX $...$ cho toán.`;
+                const el = document.createElement("textarea");
+                el.value = p; document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el);
+                Toastify({text: "Đã copy Prompt!", backgroundColor: "#3b82f6"}).showToast();
+            },
+            resetDefault: function() { if(confirm("Reset?")) document.getElementById('json-input').value = JSON.stringify(DEFAULT_DATA, null, 2); },
+            exportData: function() {
+                const a = document.createElement('a');
+                a.href = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(GAME_DATA,null,2));
+                a.download = "data.json"; a.click();
+            },
+            importData: function(input) {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    try {
+                        GAME_DATA = JSON.parse(e.target.result);
+                        localStorage.setItem('TBS_GAME_DATA', e.target.result);
+                        document.getElementById('json-input').value = e.target.result;
+                        if(document.getElementById('intro-title')) document.getElementById('intro-title').innerText = GAME_DATA.title;
+                        app.init();
+                        Toastify({text: "✅ OK!", backgroundColor: "#10B981"}).showToast();
+                        admin.close();
+                    } catch(err) { Toastify({text: "Lỗi file", backgroundColor: "red"}).showToast(); }
+                };
+                if(input.files[0]) reader.readAsText(input.files[0]);
+            }
+        };
+
+        // === GLOBALS ===
+        function toggleMusic(force) {
+            const bgm = document.getElementById('bgm');
+            if(force) { bgm.play().catch(()=>{}); }
+            else { if(bgm.paused) bgm.play(); else bgm.pause(); }
+        }
+        function startAudioContext() {
+            const bgm = document.getElementById('bgm');
+            if(bgm && bgm.paused) bgm.play().catch(()=>{});
+            document.body.onclick = null;
+        }
+        function openThemeModal() { document.getElementById('modal-theme').classList.remove('hidden'); }
+        function changeTheme(t) { document.body.className = `${t} min-h-screen flex flex-col transition-colors duration-500`; document.getElementById('modal-theme').classList.add('hidden'); }
+        function randomTeamPicker() {
+            if(app.state.teams.length === 0) return;
+            app.playSound('click');
+            let i = 0; const interval = setInterval(() => {
+                const idx = Math.floor(Math.random()*app.state.teams.length);
+                Toastify({text: "🎲 " + app.state.teams[idx].name, duration: 200, style: {background: "rgba(0,0,0,0.5)", boxShadow:"none"}}).showToast();
+                i++; if(i > 10) { clearInterval(interval); app.setActiveTeam(idx); app.celebrate(); }
+            }, 150);
+        }
+
+        window.onload = app.init.bind(app);
+    </script>
+</body>
+</html>
