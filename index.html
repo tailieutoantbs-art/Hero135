@@ -1,0 +1,2309 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Học Tập TBS - MATH & IT</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;600;800&family=Dancing+Script:wght@700&family=Montserrat:wght@700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] }, svg: { fontCache: 'global' }, startup: { typeset: false } };
+        if (typeof tailwind !== 'undefined') {
+            let tMain = localStorage.getItem('themeMain') || '#0ea5e9';
+            let tDark = localStorage.getItem('themeDark') || '#0284c7';
+            let tLight = localStorage.getItem('themeLight') || '#e0f2fe';
+            tailwind.config = { theme: { extend: { colors: { main: tMain, mainDark: tDark, mainLight: tLight }, fontFamily: { sans: ['"Be Vietnam Pro"', 'sans-serif'], display: ['"Montserrat"', 'sans-serif'], script: ['"Dancing Script"', 'cursive'] } } } };
+        }
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
+    <script src="js/config.js"></script>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="text-slate-800" data-theme="gold">
+    <div class="bg-particles"></div>
+    
+    <!-- Theme Picker -->
+    <div class="fixed bottom-6 right-6 z-[10001]">
+        <button onclick="toggleThemePicker(event)" class="w-14 h-14 bg-main text-white rounded-full shadow-2xl flex items-center justify-center text-2xl hover:scale-110 transition-transform btn-3d"><i class="fa-solid fa-palette"></i></button>
+        <div id="theme-picker-menu" class="absolute bottom-16 right-0 bg-white p-4 rounded-3xl shadow-2xl border-4 border-slate-100 hidden flex-col gap-2 w-52 origin-bottom-right transition-all zoom-in">
+            <h3 class="font-black text-slate-700 text-sm border-b-2 border-slate-100 pb-2 mb-2 text-center uppercase tracking-widest">Đổi Giao Diện</h3>
+            <button onclick="setTheme('#0ea5e9', '#0284c7', '#e0f2fe')" class="w-full flex items-center gap-3 p-2 hover:bg-sky-50 rounded-xl transition font-bold text-slate-600 text-sm border-2 border-transparent hover:border-sky-200"><div class="w-6 h-6 rounded-full bg-[#0ea5e9] shadow-sm"></div> Xanh Dương</button>
+            <button onclick="setTheme('#10b981', '#059669', '#d1fae5')" class="w-full flex items-center gap-3 p-2 hover:bg-emerald-50 rounded-xl transition font-bold text-slate-600 text-sm border-2 border-transparent hover:border-emerald-200"><div class="w-6 h-6 rounded-full bg-[#10b981] shadow-sm"></div> Xanh Lục</button>
+            <button onclick="setTheme('#8b5cf6', '#6d28d9', '#ede9fe')" class="w-full flex items-center gap-3 p-2 hover:bg-violet-50 rounded-xl transition font-bold text-slate-600 text-sm border-2 border-transparent hover:border-violet-200"><div class="w-6 h-6 rounded-full bg-[#8b5cf6] shadow-sm"></div> Tím Mộng Mơ</button>
+            <button onclick="setTheme('#f43f5e', '#e11d48', '#ffe4e6')" class="w-full flex items-center gap-3 p-2 hover:bg-rose-50 rounded-xl transition font-bold text-slate-600 text-sm border-2 border-transparent hover:border-rose-200"><div class="w-6 h-6 rounded-full bg-[#f43f5e] shadow-sm"></div> Đỏ Nhiệt Huyết</button>
+            <button onclick="setTheme('#f59e0b', '#d97706', '#fef3c7')" class="w-full flex items-center gap-3 p-2 hover:bg-amber-50 rounded-xl transition font-bold text-slate-600 text-sm border-2 border-transparent hover:border-amber-200"><div class="w-6 h-6 rounded-full bg-[#f59e0b] shadow-sm"></div> Vàng Năng Động</button>
+            <button onclick="setTheme('#3b82f6', '#1d4ed8', '#eff6ff')" class="w-full flex items-center gap-3 p-2 hover:bg-blue-50 rounded-xl transition font-bold text-slate-600 text-sm border-2 border-transparent hover:border-blue-200"><div class="w-6 h-6 rounded-full bg-[#3b82f6] shadow-sm"></div> Xanh Chuẩn</button>
+        </div>
+    </div>
+    <script>
+        function toggleThemePicker(e) {
+            e.stopPropagation();
+            let m = document.getElementById('theme-picker-menu');
+            if(m) m.classList.toggle('hidden');
+        }
+        function setTheme(main, dark, light) {
+            localStorage.setItem('themeMain', main);
+            localStorage.setItem('themeDark', dark);
+            localStorage.setItem('themeLight', light);
+            location.reload();
+        }
+        document.addEventListener('click', (e) => {
+            let m = document.getElementById('theme-picker-menu');
+            if(m && !m.classList.contains('hidden') && !e.target.closest('#theme-picker-menu')) {
+                m.classList.add('hidden');
+            }
+        });
+    </script>
+    
+    <div id="toast-success" class="fixed top-6 left-1/2 -translate-x-1/2 bg-emerald-500 text-white px-6 md:px-8 py-3.5 md:py-4 rounded-2xl md:rounded-full shadow-2xl font-bold flex items-center gap-3 z-[10000] transform transition-all duration-500 -translate-y-32 opacity-0 text-base md:text-lg pointer-events-none font-sans max-w-[90vw] md:max-w-2xl">
+        <i class="fa-solid fa-circle-check text-2xl md:text-3xl shrink-0"></i><span id="toast-msg" class="leading-snug">Thành công!</span>
+    </div>
+
+    <!-- Modal Chỉnh Sửa Bảng Tin TBS Chuyên Nghiệp -->
+    <div id="board-edit-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[9999] hidden items-center justify-center fade-in p-2 md:p-4">
+        <div class="bg-white rounded-3xl shadow-2xl p-4 md:p-6 w-full max-w-5xl relative zoom-in flex flex-col max-h-[95vh] border-2 border-slate-100 overflow-hidden">
+            <!-- Header Modal -->
+            <div class="flex items-center justify-between border-b-2 border-slate-100 pb-3 mb-3 shrink-0">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center text-xl shadow-sm"><i class="fa-solid fa-pen-to-square"></i></div>
+                    <div>
+                        <h2 class="text-xl md:text-2xl font-black text-slate-800 uppercase tracking-wide">Soạn Thảo Bảng Tin TBS</h2>
+                        <p class="text-xs font-semibold text-slate-500 hidden sm:block">Định dạng font chữ, màu sắc, canh lề và chèn nội dung nổi bật</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center gap-2">
+                    <!-- Mode Switcher Tabs -->
+                    <div class="bg-slate-100 p-1 rounded-xl flex gap-1">
+                        <button type="button" onclick="switchBoardEditorTab('visual')" id="tab-btn-visual" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-white text-main shadow-sm transition flex items-center gap-1.5"><i class="fa-solid fa-wand-magic-sparkles"></i> Trực quan</button>
+                        <button type="button" onclick="switchBoardEditorTab('preview')" id="tab-btn-preview" class="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:text-main transition flex items-center gap-1.5"><i class="fa-solid fa-eye"></i> Xem trước</button>
+                        <button type="button" onclick="switchBoardEditorTab('code')" id="tab-btn-code" class="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:text-main transition flex items-center gap-1.5"><i class="fa-solid fa-code"></i> Mã HTML</button>
+                    </div>
+                    <button onclick="closeBoardEditorModal()" class="text-slate-400 hover:text-rose-500 text-2xl w-9 h-9 flex items-center justify-center rounded-full hover:bg-slate-100 transition"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+            </div>
+            
+            <div class="overflow-y-auto admin-scroll flex-grow space-y-4 pr-1">
+                <!-- Toolbar Area (Chỉ hiện khi ở tab Trực Quan) -->
+                <div id="board-toolbar-section" class="bg-slate-50 border border-slate-200 rounded-2xl p-2.5 space-y-2 shadow-xs">
+                    <!-- Row 1: Fast Templates & Highlights & Emojis -->
+                    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-2">
+                        <div class="flex items-center gap-1.5 flex-wrap">
+                            <span class="text-[11px] font-black uppercase tracking-wider text-slate-400 mr-1"><i class="fa-solid fa-bolt text-amber-500 mr-1"></i>Mẫu nhanh:</span>
+                            <button type="button" onmousedown="event.preventDefault()" onclick="insertBoardTemplate('codes')" class="px-2.5 py-1 bg-white hover:bg-sky-50 hover:text-sky-600 border border-slate-200 rounded-lg text-xs font-bold text-slate-700 transition shadow-2xs">📋 Danh sách mã đề</button>
+                            <button type="button" onmousedown="event.preventDefault()" onclick="insertBoardTemplate('exam')" class="px-2.5 py-1 bg-white hover:bg-rose-50 hover:text-rose-600 border border-slate-200 rounded-lg text-xs font-bold text-slate-700 transition shadow-2xs">🏆 Lịch thi & kiểm tra</button>
+                            <button type="button" onmousedown="event.preventDefault()" onclick="insertBoardTemplate('opening')" class="px-2.5 py-1 bg-white hover:bg-emerald-50 hover:text-emerald-600 border border-slate-200 rounded-lg text-xs font-bold text-slate-700 transition shadow-2xs">🚀 Khai giảng lớp mới</button>
+                            <div class="h-4 w-[1px] bg-slate-300 mx-1 hidden sm:block"></div>
+                            <button type="button" onmousedown="event.preventDefault()" onclick="insertCallout('info')" class="px-2 py-1 bg-sky-100 hover:bg-sky-200 text-sky-700 rounded-lg text-xs font-bold transition">ℹ️ Khung Xanh</button>
+                            <button type="button" onmousedown="event.preventDefault()" onclick="insertCallout('alert')" class="px-2 py-1 bg-rose-100 hover:bg-rose-200 text-rose-700 rounded-lg text-xs font-bold transition">⚠️ Khung Đỏ</button>
+                            <button type="button" onmousedown="event.preventDefault()" onclick="insertCallout('success')" class="px-2 py-1 bg-emerald-100 hover:bg-emerald-200 text-emerald-700 rounded-lg text-xs font-bold transition">✅ Khung Xanh Lá</button>
+                            <button type="button" onmousedown="event.preventDefault()" onclick="insertCallout('highlight')" class="px-2 py-1 bg-amber-100 hover:bg-amber-200 text-amber-700 rounded-lg text-xs font-bold transition">🔥 Khung Vàng</button>
+                        </div>
+                        <div class="flex items-center gap-1 overflow-x-auto pb-0.5">
+                            <span class="text-[11px] font-bold text-slate-400 hidden lg:inline">Biểu tượng:</span>
+                            <button type="button" onmousedown="event.preventDefault()" onclick="insertEmoji('📢')" class="hover:scale-125 transition text-sm">📢</button>
+                            <button type="button" onmousedown="event.preventDefault()" onclick="insertEmoji('📌')" class="hover:scale-125 transition text-sm">📌</button>
+                            <button type="button" onmousedown="event.preventDefault()" onclick="insertEmoji('🔥')" class="hover:scale-125 transition text-sm">🔥</button>
+                            <button type="button" onmousedown="event.preventDefault()" onclick="insertEmoji('⭐')" class="hover:scale-125 transition text-sm">⭐</button>
+                            <button type="button" onmousedown="event.preventDefault()" onclick="insertEmoji('🚀')" class="hover:scale-125 transition text-sm">🚀</button>
+                            <button type="button" onmousedown="event.preventDefault()" onclick="insertEmoji('💡')" class="hover:scale-125 transition text-sm">💡</button>
+                            <button type="button" onmousedown="event.preventDefault()" onclick="insertEmoji('⏰')" class="hover:scale-125 transition text-sm">⏰</button>
+                            <button type="button" onmousedown="event.preventDefault()" onclick="insertEmoji('🎯')" class="hover:scale-125 transition text-sm">🎯</button>
+                            <button type="button" onmousedown="event.preventDefault()" onclick="insertEmoji('🏆')" class="hover:scale-125 transition text-sm">🏆</button>
+                            <button type="button" onmousedown="event.preventDefault()" onclick="insertEmoji('👑')" class="hover:scale-125 transition text-sm">👑</button>
+                            <button type="button" onmousedown="event.preventDefault()" onclick="insertEmoji('✅')" class="hover:scale-125 transition text-sm">✅</button>
+                            <button type="button" onmousedown="event.preventDefault()" onclick="insertEmoji('⚠️')" class="hover:scale-125 transition text-sm">⚠️</button>
+                        </div>
+                    </div>
+
+                    <!-- Row 2: Typography, Formatting, Alignment & Colors -->
+                    <div class="flex flex-wrap items-center gap-2">
+                        <!-- Headings / Block Type -->
+                        <div class="flex items-center gap-1 bg-white p-1 rounded-xl border border-slate-200 shadow-2xs">
+                            <select id="board-format-block" onchange="changeHeading(this.value)" class="bg-transparent text-xs font-bold text-slate-700 outline-none cursor-pointer pr-1">
+                                <option value="p">Đoạn văn (P)</option>
+                                <option value="h1">Tiêu đề lớn (H1)</option>
+                                <option value="h2">Tiêu đề vừa (H2)</option>
+                                <option value="h3">Tiêu đề nhỏ (H3)</option>
+                            </select>
+                        </div>
+
+                        <!-- Font Size Selector -->
+                        <div class="flex items-center gap-1 bg-white p-1 rounded-xl border border-slate-200 shadow-2xs">
+                            <i class="fa-solid fa-text-height text-slate-400 text-xs ml-1"></i>
+                            <select id="board-font-size" onchange="changeFontSize(this.value)" class="bg-transparent text-xs font-bold text-slate-700 outline-none cursor-pointer">
+                                <option value="13px">13px (Nhỏ)</option>
+                                <option value="15px" selected>15px (Chuẩn)</option>
+                                <option value="18px">18px (Vừa)</option>
+                                <option value="20px">20px (Lớn)</option>
+                                <option value="24px">24px (Rất lớn)</option>
+                                <option value="28px">28px (Cực lớn)</option>
+                                <option value="34px">34px (Khổng lồ)</option>
+                            </select>
+                        </div>
+
+                        <!-- Font Family Selector -->
+                        <div class="flex items-center gap-1 bg-white p-1 rounded-xl border border-slate-200 shadow-2xs">
+                            <i class="fa-solid fa-font text-slate-400 text-xs ml-1"></i>
+                            <select id="board-font-family" onchange="changeFontFamily(this.value)" class="bg-transparent text-xs font-bold text-slate-700 outline-none cursor-pointer">
+                                <option value="'Be Vietnam Pro', sans-serif" selected>Font: Be Vietnam Pro</option>
+                                <option value="'Montserrat', sans-serif">Font: Montserrat</option>
+                                <option value="'Dancing Script', cursive">Font: Dancing Script</option>
+                                <option value="Arial, sans-serif">Font: Arial</option>
+                                <option value="'Times New Roman', serif">Font: Times New Roman</option>
+                                <option value="'Courier New', monospace">Font: Courier New</option>
+                            </select>
+                        </div>
+
+                        <!-- Basic Formatting: Bold, Italic, Underline, Strikethrough -->
+                        <div class="flex items-center bg-white p-1 rounded-xl border border-slate-200 shadow-2xs gap-0.5">
+                            <button type="button" onmousedown="event.preventDefault()" onclick="formatDoc('bold')" class="w-7 h-7 rounded-lg hover:bg-slate-100 flex items-center justify-center font-bold text-slate-700 text-xs transition" title="In đậm (Ctrl+B)"><b>B</b></button>
+                            <button type="button" onmousedown="event.preventDefault()" onclick="formatDoc('italic')" class="w-7 h-7 rounded-lg hover:bg-slate-100 flex items-center justify-center italic text-slate-700 text-xs transition" title="In nghiêng (Ctrl+I)"><i>I</i></button>
+                            <button type="button" onmousedown="event.preventDefault()" onclick="formatDoc('underline')" class="w-7 h-7 rounded-lg hover:bg-slate-100 flex items-center justify-center underline text-slate-700 text-xs transition" title="Gạch chân (Ctrl+U)"><u>U</u></button>
+                            <button type="button" onmousedown="event.preventDefault()" onclick="formatDoc('strikeThrough')" class="w-7 h-7 rounded-lg hover:bg-slate-100 flex items-center justify-center line-through text-slate-700 text-xs transition" title="Gạch ngang"><s>S</s></button>
+                        </div>
+
+                        <!-- Text Alignments -->
+                        <div class="flex items-center bg-white p-1 rounded-xl border border-slate-200 shadow-2xs gap-0.5">
+                            <button type="button" onmousedown="event.preventDefault()" onclick="formatDoc('justifyLeft')" class="w-7 h-7 rounded-lg hover:bg-slate-100 flex items-center justify-center text-slate-700 text-xs transition" title="Canh trái"><i class="fa-solid fa-align-left"></i></button>
+                            <button type="button" onmousedown="event.preventDefault()" onclick="formatDoc('justifyCenter')" class="w-7 h-7 rounded-lg hover:bg-slate-100 flex items-center justify-center text-slate-700 text-xs transition" title="Canh giữa"><i class="fa-solid fa-align-center"></i></button>
+                            <button type="button" onmousedown="event.preventDefault()" onclick="formatDoc('justifyRight')" class="w-7 h-7 rounded-lg hover:bg-slate-100 flex items-center justify-center text-slate-700 text-xs transition" title="Canh phải"><i class="fa-solid fa-align-right"></i></button>
+                            <button type="button" onmousedown="event.preventDefault()" onclick="formatDoc('justifyFull')" class="w-7 h-7 rounded-lg hover:bg-slate-100 flex items-center justify-center text-slate-700 text-xs transition" title="Canh đều 2 bên"><i class="fa-solid fa-align-justify"></i></button>
+                        </div>
+
+                        <!-- Text Colors (Màu chữ) -->
+                        <div class="flex items-center bg-white p-1 rounded-xl border border-slate-200 shadow-2xs gap-1.5">
+                            <span class="text-[11px] font-bold text-slate-400 ml-1"><i class="fa-solid fa-palette text-xs mr-0.5"></i>Màu:</span>
+                            <button type="button" onmousedown="event.preventDefault()" onclick="changeTextColor('#1e293b')" class="w-5 h-5 rounded-full bg-slate-800 hover:scale-125 transition border border-white shadow-2xs" title="Màu đen/mặc định"></button>
+                            <button type="button" onmousedown="event.preventDefault()" onclick="changeTextColor('#dc2626')" class="w-5 h-5 rounded-full bg-red-600 hover:scale-125 transition border border-white shadow-2xs" title="Màu đỏ"></button>
+                            <button type="button" onmousedown="event.preventDefault()" onclick="changeTextColor('#0284c7')" class="w-5 h-5 rounded-full bg-sky-600 hover:scale-125 transition border border-white shadow-2xs" title="Màu xanh dương"></button>
+                            <button type="button" onmousedown="event.preventDefault()" onclick="changeTextColor('#16a34a')" class="w-5 h-5 rounded-full bg-emerald-600 hover:scale-125 transition border border-white shadow-2xs" title="Màu xanh lá"></button>
+                            <button type="button" onmousedown="event.preventDefault()" onclick="changeTextColor('#ea580c')" class="w-5 h-5 rounded-full bg-orange-600 hover:scale-125 transition border border-white shadow-2xs" title="Màu cam"></button>
+                            <button type="button" onmousedown="event.preventDefault()" onclick="changeTextColor('#9333ea')" class="w-5 h-5 rounded-full bg-purple-600 hover:scale-125 transition border border-white shadow-2xs" title="Màu tím"></button>
+                            <button type="button" onmousedown="event.preventDefault()" onclick="changeTextColor('#ca8a04')" class="w-5 h-5 rounded-full bg-yellow-600 hover:scale-125 transition border border-white shadow-2xs" title="Màu vàng"></button>
+                            <label class="w-6 h-6 rounded-full border border-dashed border-slate-400 hover:border-main flex items-center justify-center cursor-pointer hover:scale-110 transition relative" title="Chọn màu bất kỳ">
+                                <i class="fa-solid fa-eye-dropper text-[10px] text-slate-500"></i>
+                                <input type="color" onchange="changeTextColor(this.value)" class="opacity-0 absolute inset-0 w-full h-full cursor-pointer">
+                            </label>
+                        </div>
+
+                        <!-- Text Highlight (Màu nền chữ) -->
+                        <div class="flex items-center bg-white p-1 rounded-xl border border-slate-200 shadow-2xs gap-1.5">
+                            <span class="text-[11px] font-bold text-slate-400 ml-1"><i class="fa-solid fa-highlighter text-xs mr-0.5"></i>Nền:</span>
+                            <button type="button" onmousedown="event.preventDefault()" onclick="changeHighlight('#fef08a')" class="w-5 h-5 rounded-md bg-yellow-200 hover:scale-125 transition border border-slate-200 shadow-2xs" title="Nền vàng"></button>
+                            <button type="button" onmousedown="event.preventDefault()" onclick="changeHighlight('#bbf7d0')" class="w-5 h-5 rounded-md bg-green-200 hover:scale-125 transition border border-slate-200 shadow-2xs" title="Nền xanh lá"></button>
+                            <button type="button" onmousedown="event.preventDefault()" onclick="changeHighlight('#bae6fd')" class="w-5 h-5 rounded-md bg-sky-200 hover:scale-125 transition border border-slate-200 shadow-2xs" title="Nền xanh dương"></button>
+                            <button type="button" onmousedown="event.preventDefault()" onclick="changeHighlight('#fbcfe8')" class="w-5 h-5 rounded-md bg-pink-200 hover:scale-125 transition border border-slate-200 shadow-2xs" title="Nền hồng"></button>
+                            <button type="button" onmousedown="event.preventDefault()" onclick="changeHighlight('transparent')" class="w-5 h-5 rounded-md bg-white hover:scale-125 transition border border-slate-300 text-[10px] flex items-center justify-center text-slate-400" title="Bỏ màu nền"><i class="fa-solid fa-ban"></i></button>
+                        </div>
+
+                        <!-- Lists, Horizontal Rule, Table & Clear Format -->
+                        <div class="flex items-center bg-white p-1 rounded-xl border border-slate-200 shadow-2xs gap-0.5">
+                            <button type="button" onmousedown="event.preventDefault()" onclick="formatDoc('insertUnorderedList')" class="w-7 h-7 rounded-lg hover:bg-slate-100 flex items-center justify-center text-slate-700 text-xs transition" title="Danh sách chấm"><i class="fa-solid fa-list-ul"></i></button>
+                            <button type="button" onmousedown="event.preventDefault()" onclick="formatDoc('insertOrderedList')" class="w-7 h-7 rounded-lg hover:bg-slate-100 flex items-center justify-center text-slate-700 text-xs transition" title="Danh sách số"><i class="fa-solid fa-list-ol"></i></button>
+                            <button type="button" onmousedown="event.preventDefault()" onclick="formatDoc('insertHorizontalRule')" class="w-7 h-7 rounded-lg hover:bg-slate-100 flex items-center justify-center text-slate-700 text-xs transition" title="Đường kẻ ngang"><i class="fa-solid fa-minus"></i></button>
+                            <button type="button" onmousedown="event.preventDefault()" onclick="insertBoardLink()" class="w-7 h-7 rounded-lg hover:bg-slate-100 flex items-center justify-center text-slate-700 text-xs transition" title="Chèn liên kết Web"><i class="fa-solid fa-link"></i></button>
+                            <button type="button" onmousedown="event.preventDefault()" onclick="insertBoardTable()" class="w-7 h-7 rounded-lg hover:bg-slate-100 flex items-center justify-center text-slate-700 text-xs transition" title="Chèn Bảng mẫu"><i class="fa-solid fa-table"></i></button>
+                            <button type="button" onmousedown="event.preventDefault()" onclick="clearFormatting()" class="w-7 h-7 rounded-lg hover:bg-slate-100 flex items-center justify-center text-rose-600 text-xs transition" title="Xóa định dạng"><i class="fa-solid fa-eraser"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Content Area -->
+                <div>
+                    <label class="font-bold text-slate-700 text-sm mb-1.5 flex items-center justify-between">
+                        <span class="flex items-center"><i class="fa-solid fa-align-left mr-2 text-main"></i>Nội dung Tin Tuần / Tháng:</span>
+                        <span class="text-xs font-normal text-slate-400">Hỗ trợ định dạng trực quan, HTML và công thức Toán MathJax</span>
+                    </label>
+                    
+                    <!-- Visual Rich Editor Div -->
+                    <div id="board-rich-editor" contenteditable="true" class="w-full min-h-[260px] max-h-[360px] overflow-y-auto p-4 border-2 border-slate-200 rounded-2xl outline-none focus:border-main font-medium text-slate-700 bg-white shadow-inner admin-scroll leading-relaxed text-base transition"></div>
+                    
+                    <!-- HTML / Markdown Code Textarea (Chỉ hiện khi ở tab Mã HTML) -->
+                    <textarea id="board-edit-content" class="w-full min-h-[260px] max-h-[360px] p-4 border-2 border-slate-200 rounded-2xl outline-none focus:border-main font-medium text-slate-800 font-mono resize-none shadow-inner text-xs bg-slate-900 text-emerald-400 hidden admin-scroll" placeholder="Nhập hoặc chỉnh sửa trực tiếp mã HTML/Markdown..."></textarea>
+                    
+                    <!-- Live Preview Div (Chỉ hiện khi ở tab Xem trước) -->
+                    <div id="board-preview-container" class="w-full min-h-[260px] max-h-[360px] overflow-y-auto p-6 border-2 border-amber-200 bg-amber-50/30 rounded-2xl shadow-inner admin-scroll hidden prose prose-slate max-w-none"></div>
+                </div>
+                
+                <!-- Events Area -->
+                <div class="border-t border-slate-200 pt-3">
+                    <label class="font-bold text-slate-700 text-sm mb-1.5 flex items-center justify-between">
+                        <span class="flex items-center"><i class="fa-solid fa-calendar-days mr-2 text-rose-500"></i>Sự kiện sắp tới (Cột bên trái - Mỗi dòng 1 sự kiện):</span>
+                    </label>
+                    <textarea id="board-edit-events" class="w-full h-24 p-3 border-2 border-slate-200 rounded-2xl outline-none focus:border-main font-medium text-slate-700 resize-none shadow-inner text-sm bg-white admin-scroll" placeholder="Ví dụ: Thi thử THPT Quốc gia (Toán)&#10;Cập nhật Ngân hàng câu hỏi tháng 8&#10;Khảo sát chất lượng Lớp 12"></textarea>
+                </div>
+            </div>
+            
+            <!-- Footer Action Buttons -->
+            <div class="flex items-center gap-3 pt-3 border-t border-slate-100 shrink-0 mt-2">
+                <button type="button" onclick="closeBoardEditorModal()" class="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-xl transition text-base">Hủy bỏ</button>
+                <button type="button" onclick="saveBoardContent()" class="flex-2 py-3.5 bg-main text-white font-black rounded-xl shadow-md hover:bg-mainDark hover:shadow-lg transition-all text-base btn-3d"><i class="fa-solid fa-floppy-disk mr-2"></i>LƯU THAY ĐỔI BẢNG TIN</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Quản Lý & Cập Nhật Danh Bạ Liên Kết -->
+    <div id="links-edit-modal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-md z-[9999] hidden items-center justify-center fade-in p-2 md:p-4">
+        <div class="bg-white rounded-3xl shadow-2xl p-4 md:p-6 w-full max-w-4xl relative zoom-in flex flex-col max-h-[92vh] border-2 border-slate-100 overflow-hidden">
+            <!-- Header Modal -->
+            <div class="flex items-center justify-between border-b-2 border-slate-100 pb-3 mb-3 shrink-0">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-2xl bg-sky-100 text-sky-600 flex items-center justify-center text-xl shadow-sm">
+                        <i class="fa-solid fa-link"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl md:text-2xl font-black text-slate-800 uppercase tracking-wide">Cập Nhật Danh Bạ Liên Kết</h2>
+                        <p class="text-xs font-semibold text-slate-500">Thêm mới, chỉnh sửa, đổi thứ tự và quản lý liên kết trên toàn hệ thống</p>
+                    </div>
+                </div>
+                <button type="button" onclick="closeLinksEditorModal()" class="text-slate-400 hover:text-rose-500 text-2xl w-9 h-9 flex items-center justify-center rounded-full hover:bg-slate-100 transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="overflow-y-auto admin-scroll flex-grow space-y-4 pr-1">
+                <!-- Auth PIN container if not logged in -->
+                <div id="links-auth-pin-container" class="hidden bg-amber-50 border border-amber-200 p-3.5 rounded-2xl">
+                    <div class="flex flex-col sm:flex-row items-center gap-3">
+                        <div class="flex items-center gap-2 text-amber-800 text-xs font-bold shrink-0">
+                            <i class="fa-solid fa-key text-amber-600"></i> Mã xác thực Giáo viên / Admin:
+                        </div>
+                        <input type="password" id="links-reset-auth-pin" class="flex-grow p-2 border-2 border-amber-300 rounded-xl outline-none focus:border-amber-500 font-bold text-center text-slate-800 text-sm bg-white shadow-inner" placeholder="Nhập PIN giáo viên (123456...)">
+                    </div>
+                </div>
+
+                <!-- Add / Edit Link Form -->
+                <div class="bg-slate-50 border-2 border-slate-200 rounded-2xl p-4 shadow-xs">
+                    <h3 id="link-form-heading" class="text-sm font-black text-sky-800 uppercase tracking-wider mb-3 flex items-center gap-2">
+                        <i id="link-form-heading-icon" class="fa-solid fa-circle-plus text-sky-500"></i> <span id="link-form-title-text">Thêm Liên Kết Mới</span>
+                    </h3>
+                    <input type="hidden" id="link-edit-index" value="-1">
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-3 mb-3">
+                        <div class="md:col-span-4">
+                            <label class="block text-xs font-bold text-slate-600 mb-1">Tên liên kết / Tiêu đề: <span class="text-red-500">*</span></label>
+                            <input type="text" id="link-input-title" placeholder="VD: Máy tính Desmos" class="w-full p-2.5 bg-white border border-slate-300 rounded-xl outline-none focus:border-sky-500 font-bold text-sm text-slate-700 shadow-inner">
+                        </div>
+                        <div class="md:col-span-5">
+                            <label class="block text-xs font-bold text-slate-600 mb-1">Địa chỉ URL: <span class="text-red-500">*</span></label>
+                            <input type="url" id="link-input-url" placeholder="https://..." class="w-full p-2.5 bg-white border border-slate-300 rounded-xl outline-none focus:border-sky-500 font-medium text-sm text-slate-700 shadow-inner">
+                        </div>
+                        <div class="md:col-span-3">
+                            <label class="block text-xs font-bold text-slate-600 mb-1">Biểu tượng (Icon):</label>
+                            <div class="flex items-center gap-2">
+                                <div id="link-icon-preview" class="w-10 h-10 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center text-lg shrink-0 border border-sky-200 shadow-2xs">
+                                    <i class="fa-solid fa-link"></i>
+                                </div>
+                                <select id="link-input-icon" onchange="updateLinkIconPreview(this.value)" class="flex-grow p-2.5 bg-white border border-slate-300 rounded-xl outline-none focus:border-sky-500 font-bold text-xs text-slate-700 shadow-inner cursor-pointer">
+                                    <option value="fa-solid fa-link">🔗 Mặc định (Link)</option>
+                                    <option value="fa-solid fa-calculator">🧮 Máy tính Desmos</option>
+                                    <option value="fa-solid fa-file-pdf">📄 Tài liệu PDF</option>
+                                    <option value="fa-solid fa-hard-drive">💾 Google Drive / Cloud</option>
+                                    <option value="fa-solid fa-robot">🤖 AI / Giải toán</option>
+                                    <option value="fa-solid fa-folder-plus">📂 Ngân hàng đề thi</option>
+                                    <option value="fa-solid fa-pen-to-square">📝 Làm bài kiểm tra</option>
+                                    <option value="fa-solid fa-file-code">💻 Markdown / Code</option>
+                                    <option value="fa-solid fa-wand-magic-sparkles">✨ Trợ lý giáo án</option>
+                                    <option value="fa-solid fa-graduation-cap">🎓 Luyện thi THPT</option>
+                                    <option value="fa-solid fa-book-open">📖 Sách / Lý thuyết</option>
+                                    <option value="fa-solid fa-chart-pie">📊 Đồ thị / Thống kê</option>
+                                    <option value="fa-solid fa-video">🎬 Video bài giảng</option>
+                                    <option value="fa-solid fa-globe">🌐 Website ngoài</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-end gap-2">
+                        <button type="button" id="btn-cancel-link-edit" onclick="cancelEditLinkItem()" class="hidden px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold rounded-xl text-xs transition">Hủy sửa</button>
+                        <button type="button" id="btn-submit-link-item" onclick="submitLinkItem()" class="px-5 py-2.5 bg-sky-600 hover:bg-sky-700 text-white font-black rounded-xl text-xs shadow-md transition flex items-center gap-1.5 btn-3d">
+                            <i id="btn-submit-link-icon" class="fa-solid fa-plus"></i> <span id="btn-submit-link-text">Thêm Vào Danh Sách</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Links Table / List -->
+                <div>
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="text-xs font-black text-slate-600 uppercase tracking-wider flex items-center gap-1.5">
+                            <i class="fa-solid fa-list-check text-sky-500"></i> Danh Sách Liên Kết Hiện Có (<span id="links-count-badge">0</span>)
+                        </h3>
+                        <button type="button" onclick="resetDefaultLinks()" class="text-xs text-sky-600 hover:text-sky-800 font-bold hover:underline flex items-center gap-1">
+                            <i class="fa-solid fa-rotate-left"></i> Khôi phục mẫu 9 liên kết
+                        </button>
+                    </div>
+
+                    <div class="border border-slate-200 rounded-2xl overflow-hidden shadow-inner bg-white">
+                        <div id="links-editor-list" class="divide-y divide-slate-100 max-h-[260px] overflow-y-auto admin-scroll">
+                            <!-- Rendered list items -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Action Buttons -->
+            <div class="flex items-center justify-between gap-3 pt-3 border-t border-slate-100 shrink-0 mt-2">
+                <button type="button" onclick="closeLinksEditorModal()" class="px-5 py-3 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-xl transition text-sm">Đóng</button>
+                <button type="button" id="btn-save-global-links" onclick="saveAllGlobalLinks()" class="flex-grow sm:flex-grow-0 sm:px-8 py-3 bg-gradient-to-r from-sky-500 to-mainDark text-white font-black rounded-xl shadow-md hover:from-sky-600 hover:to-mainDark transition-all text-sm btn-3d flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-cloud-arrow-up"></i> LƯU & ĐỒNG BỘ LIÊN KẾT
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <header id="main-header" class="glass sticky top-0 z-50 px-6 py-2 flex flex-col md:flex-row justify-between items-center rounded-b-3xl mx-4 mt-0 gap-4 md:gap-0 shadow-sm transition-all duration-300 relative">
+        <div class="flex items-center gap-3">
+            <button onclick="togglePracticeMenu(event)" id="btn-hamburger-menu" class="w-10 h-10 rounded-full bg-white text-slate-600 shadow hover:text-main hover:bg-slate-50 flex items-center justify-center transition-all shrink-0 z-10 mr-1 tooltip-container" title="Danh sách Đề Luyện Tập">
+                <i class="fa-solid fa-bars text-xl"></i>
+            </button>
+            <div class="cursor-pointer flex items-center gap-3" onclick="navTo('home')">
+                <div class="relative w-16 h-16 flex items-center justify-center shrink-0 bg-white rounded-full p-1 border border-slate-100 shadow-md">
+                    <img src="logo.png" alt="Logo TBS" class="w-10 h-10 rounded-full z-10 object-contain" onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMGVhNWU5IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTEyIDJMMiA3bDEwIDUgMTAtNXMtMS0yLjUtMS01LS40LTUtMS01eiIvPjwvc3ZnPg==';">
+                </div>
+            <div class="flex flex-col justify-center">
+                <h1 class="text-base md:text-xl font-black text-main uppercase tracking-widest drop-shadow-sm leading-tight">Hệ Thống Học Tập TBS</h1>
+                <span class="font-script text-lg md:text-xl font-bold leading-tight drop-shadow-sm text-red-600"><b>Maths & IT_TBS</b></span>
+            </div>
+            </div>
+        </div>
+        
+        <nav class="flex gap-6 md:gap-8 overflow-x-auto max-w-full pb-1 md:pb-0 admin-scroll z-10 px-2">
+            <button onclick="navTo('board')" id="nav-board" class="relative py-2 text-[15px] transition border-b-[3px] border-transparent shrink-0 flex items-center gap-2 group">
+                <span class="absolute -top-1 -right-3 flex h-3.5 w-3.5 z-20"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span><span class="relative inline-flex rounded-full h-3.5 w-3.5 bg-red-500 border-2 border-white"></span></span>
+                <div class="bg-gradient-to-r from-amber-500 to-orange-600 text-transparent bg-clip-text font-black flex items-center gap-2 group-hover:scale-105 transition-transform uppercase"><i class="fa-solid fa-meteor text-orange-500 group-hover:animate-pulse text-lg"></i> BẢNG TIN</div>
+            </button>
+            <button onclick="navTo('home')" id="nav-home" class="py-2 text-[15px] font-black text-slate-500 hover:text-main transition border-b-[3px] border-transparent tab-active shrink-0 flex items-center gap-2 uppercase"><i class="fa-solid fa-house text-lg"></i> TỔNG QUAN</button>
+            <button onclick="navTo('links')" id="nav-links" class="py-2 text-[15px] font-black text-slate-500 hover:text-main transition border-b-[3px] border-transparent shrink-0 flex items-center gap-2 uppercase"><i class="fa-solid fa-link text-lg"></i> LIÊN KẾT</button>
+            <button onclick="navTo('guide')" id="nav-guide" class="py-2 text-[15px] font-black text-slate-500 hover:text-main transition border-b-[3px] border-transparent shrink-0 flex items-center gap-2 uppercase"><i class="fa-solid fa-book-open text-lg"></i> HƯỚNG DẪN</button>
+        </nav>
+
+        <div class="flex gap-2 items-center flex-wrap justify-end z-10">
+            <div id="user-info-display" class="hidden items-center gap-2 bg-white/70 p-1 pr-3 rounded-full border border-slate-200 shadow-sm transition-all">
+                <img id="user-avatar" src="" class="w-8 h-8 rounded-full border border-slate-300">
+                <span id="user-email" class="text-xs font-bold text-slate-700 truncate max-w-[120px] hidden md:block"></span>
+                <button onclick="logoutGoogle()" class="text-red-500 hover:text-red-700 ml-1 transition" title="Đăng xuất"><i class="fa-solid fa-right-from-bracket"></i></button>
+            </div>
+            <button onclick="document.getElementById('whiteboard-modal').classList.remove('hidden')" class="w-8 h-8 rounded-full bg-indigo-500 hover:bg-indigo-600 text-white shadow-sm flex items-center justify-center transition-all shrink-0 badge-shine" title="Mở Bảng Phụ / Nháp"><i class="fa-solid fa-chalkboard"></i></button>
+        </div>
+    </header>
+
+    <main id="app-content" class="flex-grow p-6 flex flex-col items-center justify-center w-full max-w-6xl mx-auto relative z-10">
+        <div class="glass-panel p-8 md:p-12 rounded-3xl w-full max-w-5xl text-center fade-in border-t-4 border-main">
+            <h1 class="text-2xl md:text-3xl lg:text-4xl font-display font-black text-main mb-6 uppercase tracking-wider leading-tight">TRƯỜNG TH, THCS VÀ THPT THANH BÌNH</h1>
+            <div class="flex justify-center mb-6">
+                <img src="logo.png" alt="Logo TBS" onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMGVhNWU5IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTEyIDJMMiA3bDEwIDUgMTAtNXMtMS0yLjUtMS01LS40LTUtMS01eiIvPjwvc3ZnPg==';" class="w-32 h-32 rounded-full shadow-xl object-contain bg-white p-2 border-4 border-white">
+            </div>
+            <p class="text-slate-600 font-bold mb-10 text-lg md:text-xl">Nền tảng Ôn tập & Kiểm tra trực tuyến</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+                <div class="bg-gradient-to-br from-emerald-50 to-teal-100 p-6 rounded-2xl shadow-md border border-emerald-200 relative overflow-hidden group hover:shadow-xl transition-all duration-300">
+                    <div class="absolute -right-4 -top-4 text-emerald-500/10 text-8xl transition-transform group-hover:scale-110"><i class="fa-solid fa-graduation-cap"></i></div>
+                    <h2 class="text-xl font-black text-emerald-800 mb-2 relative z-10">KHU VỰC HỌC SINH</h2>
+                    <p class="text-emerald-600 font-medium mb-4 relative z-10 text-xs">Nhập mã bài thi để làm bài cá nhân</p>
+                    <input type="text" id="play-code-input" class="w-full p-3 border-2 border-emerald-300 rounded-xl focus:border-main outline-none font-black text-center text-2xl tracking-widest text-emerald-700 uppercase mb-4 shadow-inner relative z-10 bg-white" placeholder="MÃ ĐỀ THI" maxlength="6" onkeypress="if(event.key === 'Enter') handlePlayCode()">
+                    <button id="btn-play-code" onclick="handlePlayCode()" class="w-full py-3 bg-main text-white rounded-xl font-black shadow-md hover:bg-mainDark hover:scale-105 transition relative z-10 text-base"><i class="fa-solid fa-play mr-2"></i> VÀO THI NGAY</button>
+                </div>
+                
+                <div class="bg-gradient-to-br from-amber-50 to-orange-100 p-6 rounded-2xl shadow-md border border-amber-200 relative overflow-hidden group hover:shadow-xl transition-all duration-300 flex flex-col">
+                    <div class="absolute -right-4 -top-4 text-amber-500/10 text-8xl transition-transform group-hover:scale-110"><i class="fa-solid fa-magnifying-glass"></i></div>
+                    <h2 class="text-xl font-black text-amber-800 mb-2 relative z-10">TRA CỨU KẾT QUẢ</h2>
+                    <p class="text-amber-600 font-medium mb-4 relative z-10 text-xs">Xem điểm & Vinh danh toàn trường</p>
+                    <div class="flex-grow"></div>
+                    <div class="flex flex-col gap-2 relative z-10">
+                        <button onclick="openLookupModal()" class="w-full py-3 bg-white border border-main text-main rounded-xl font-black shadow-sm hover:bg-mainLight transition text-sm"><i class="fa-solid fa-magnifying-glass mr-2"></i> CÁ NHÂN</button>
+                        <button onclick="openLeaderboardModal()" class="w-full py-3 bg-main text-white rounded-xl font-black shadow-md hover:bg-mainDark hover:scale-105 transition text-base"><i class="fa-solid fa-trophy mr-2"></i> BẢNG VÀNG</button>
+                    </div>
+                </div>
+
+                <div class="bg-gradient-to-br from-sky-50 to-blue-100 p-6 rounded-2xl shadow-md border border-sky-200 relative overflow-hidden group hover:shadow-xl transition-all duration-300 flex flex-col">
+                    <div class="absolute -right-4 -top-4 text-sky-500/10 text-8xl transition-transform group-hover:scale-110"><i class="fa-solid fa-chalkboard-user"></i></div>
+                    <h2 class="text-xl font-black text-sky-800 mb-2 relative z-10">DÀNH CHO GIÁO VIÊN</h2>
+                    <p class="text-sky-600 font-medium mb-4 relative z-10 text-xs">Quản trị bài thi & Ngân hàng câu hỏi</p>
+                    <div class="flex-grow"></div>
+                    <div class="relative z-10" id="home-teacher-login-container">
+                        <button onclick="openTeacherLoginModal()" class="w-full py-3 bg-white border border-slate-300 rounded-xl font-black shadow-md flex justify-center items-center gap-2 hover:bg-slate-50 transition"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-5 h-5"> ĐĂNG NHẬP (GIÁO VIÊN)</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Đăng Nhập Giáo Viên / Admin -->
+    <div id="teacher-login-modal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-[9999] hidden flex items-center justify-center p-4 fade-in">
+        <div class="bg-white p-6 md:p-8 rounded-3xl w-full max-w-md relative shadow-2xl zoom-in border-4 border-sky-200">
+            <button onclick="closeTeacherLoginModal()" class="absolute top-4 right-4 text-slate-400 hover:text-rose-500 text-2xl w-10 h-10 flex items-center justify-center rounded-full bg-slate-100 transition z-10"><i class="fa-solid fa-xmark"></i></button>
+            
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-sky-100 text-sky-600 rounded-full flex items-center justify-center text-3xl mx-auto mb-3 shadow-inner">
+                    <i class="fa-solid fa-user-shield"></i>
+                </div>
+                <h3 class="text-2xl font-black text-slate-800 uppercase tracking-wide">ĐĂNG NHẬP GIÁO VIÊN</h3>
+                <p class="text-xs text-slate-500 font-bold mt-1">Hệ thống Quản trị & Ngân hàng câu hỏi TBS</p>
+            </div>
+
+            <div class="space-y-4">
+                <!-- Option 1: Teacher PIN -->
+                <div>
+                    <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-1.5"><i class="fa-solid fa-key text-amber-500 mr-1"></i> Mã PIN Giáo viên / Admin:</label>
+                    <input type="password" id="teacher-login-pin" class="w-full p-3.5 border-2 border-slate-200 rounded-2xl focus:border-sky-500 outline-none font-black text-center text-xl tracking-widest text-slate-800 shadow-inner bg-slate-50" placeholder="••••••" onkeypress="if(event.key==='Enter') loginWithPin()">
+                    <p class="text-[11px] text-slate-400 mt-1 italic text-center">Mật khẩu PIN mặc định: <b>123456</b> hoặc <b>tbs2025</b></p>
+                </div>
+
+                <button onclick="loginWithPin()" class="w-full py-3.5 bg-sky-600 hover:bg-sky-700 text-white font-black rounded-2xl shadow-md transition text-base btn-3d uppercase">
+                    <i class="fa-solid fa-right-to-bracket mr-2"></i> ĐĂNG NHẬP BẰNG PIN
+                </button>
+
+                <div class="flex items-center my-3">
+                    <div class="flex-grow border-t border-slate-200"></div>
+                    <span class="px-3 text-[11px] font-bold text-slate-400 uppercase">Hoặc</span>
+                    <div class="flex-grow border-t border-slate-200"></div>
+                </div>
+
+                <!-- Option 2: Google OAuth -->
+                <div>
+                    <button onclick="loginWithGoogle()" class="w-full py-3 bg-white border-2 border-slate-200 hover:border-sky-400 rounded-2xl font-black text-slate-700 shadow-sm flex items-center justify-center gap-3 transition hover:bg-sky-50 text-xs">
+                        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-4 h-4"> Đăng Nhập Google (OAuth)
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="lookup-modal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[9999] hidden flex items-center justify-center p-4">
+        <div class="bg-white p-8 rounded-3xl text-center zoom-in max-w-md w-full relative shadow-2xl border-4 border-amber-100">
+            <button onclick="closeLookupModal()" class="absolute top-4 right-4 text-slate-400 hover:text-red-500 text-2xl w-10 h-10 flex items-center justify-center rounded-full bg-slate-100"><i class="fa-solid fa-xmark"></i></button>
+            <div class="w-20 h-20 bg-amber-100 text-amber-500 rounded-full flex items-center justify-center text-4xl mx-auto mb-4"><i class="fa-solid fa-magnifying-glass"></i></div>
+            <h3 class="text-2xl font-black text-slate-800 mb-4">Tra Cứu Kết Quả</h3>
+            
+            <div class="flex gap-2 mb-6">
+                <button id="btn-scope-personal" onclick="setLookupScope('personal')" class="flex-1 py-2 rounded-xl text-xs sm:text-sm font-bold bg-amber-500 text-white shadow transition-all">Cá nhân</button>
+                <button id="btn-scope-class" onclick="setLookupScope('class')" class="flex-1 py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all">Lớp</button>
+                <button id="btn-scope-grade" onclick="setLookupScope('grade')" class="flex-1 py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all">Khối</button>
+                <button id="btn-scope-school" onclick="setLookupScope('school')" class="flex-1 py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all">Trường</button>
+            </div>
+
+            <div id="lookup-input-container" class="relative">
+                <input type="text" id="lookup-input" class="w-full p-4 pr-12 border-2 border-amber-300 rounded-xl mb-6 outline-none focus:border-amber-500 text-center font-bold text-slate-700 text-xl shadow-inner uppercase" placeholder="Nhập ID học sinh..." onkeypress="if(event.key === 'Enter') performLookup()">
+                <button type="button" onclick="document.getElementById('lookup-input').value=''; document.getElementById('lookup-input').focus();" class="absolute right-4 top-4 text-slate-400 hover:text-slate-600 text-xl w-8 h-8 rounded-full flex items-center justify-center" title="Xóa nội dung"><i class="fa-solid fa-circle-xmark"></i></button>
+            </div>
+            
+            <button id="btn-lookup" onclick="performLookup()" class="w-full py-4 bg-amber-500 text-white rounded-xl font-bold shadow-lg hover:bg-amber-600 transition text-lg"><i class="fa-solid fa-search mr-2"></i>Tra Cứu Ngay</button>
+        </div>
+    </div>
+
+    <div id="personal-results-modal" class="fixed inset-0 bg-slate-800/60 backdrop-blur-md z-[9999] hidden flex items-center justify-center p-2 md:p-4">
+        <div class="bg-white p-4 md:p-6 rounded-3xl w-full max-w-6xl relative shadow-[0_20px_50px_rgba(0,0,0,0.2)] border border-slate-100 zoom-in flex flex-col max-h-[90vh]">
+            <button onclick="document.getElementById('personal-results-modal').classList.add('hidden')" class="absolute top-4 right-4 text-slate-400 hover:text-red-500 text-2xl w-10 h-10 flex items-center justify-center rounded-full bg-slate-100 shrink-0 z-10"><i class="fa-solid fa-xmark"></i></button>
+            <div class="flex flex-col md:flex-row items-center justify-between mb-4 shrink-0 mt-6 md:mt-0 gap-4 border-b border-slate-100 pb-4">
+                <div class="text-center md:text-left flex-grow">
+                    <h3 class="text-lg md:text-xl font-black uppercase tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-500"><i class="fa-solid fa-id-badge text-amber-500 mr-2"></i>BẢNG ĐIỂM CHI TIẾT</h3>
+                    <p id="personal-results-name" class="text-xl md:text-2xl font-bold text-slate-700 mt-1"></p>
+                </div>
+                <button onclick="exportGroupCSV()" class="px-5 py-2.5 bg-emerald-500 text-white rounded-xl font-bold shadow-md hover:bg-emerald-600 transition flex items-center gap-2 shrink-0 btn-3d"><i class="fa-solid fa-file-csv"></i> Xuất CSV</button>
+            </div>
+            <div class="flex-grow overflow-x-auto overflow-y-auto admin-scroll border border-slate-200 rounded-xl bg-white shadow-inner">
+                <table class="w-full text-left border-collapse min-w-[800px]">
+                    <thead id="personal-results-thead">
+                        <tr class="bg-gradient-to-r from-slate-800 to-slate-700 text-white font-bold text-[10px] md:text-xs uppercase tracking-wider sticky top-0 shadow-md z-10">
+                            <th class="p-4 text-center">Ngày Thi</th><th class="p-4 text-center">Mã Đề</th><th class="p-4 text-center">Lần</th><th class="p-4 text-center text-sky-300">Phần 1</th><th class="p-4 text-center text-amber-300">Phần 2</th><th class="p-4 text-center text-red-300">Phần 3</th><th class="p-4 text-center text-emerald-300">Tổng</th>
+                        </tr>
+                    </thead>
+                    <tbody id="personal-results-tbody" class="divide-y divide-slate-100"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="leaderboard-modal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[9999] hidden flex items-center justify-center p-4">
+        <div class="bg-white p-6 md:p-8 rounded-3xl w-full max-w-3xl relative shadow-[0_20px_50px_rgba(0,0,0,0.3)] border-4 border-amber-200 zoom-in flex flex-col max-h-[90vh]">
+            <!-- Top Controls -->
+            <div class="absolute top-4 right-4 flex items-center gap-2 z-20">
+                <button onclick="refreshLeaderboardData()" class="w-10 h-10 flex items-center justify-center rounded-full bg-amber-50 text-amber-600 hover:bg-amber-100 hover:scale-105 transition shadow-sm border border-amber-200" title="Làm mới dữ liệu"><i id="btn-refresh-lb-icon" class="fa-solid fa-arrows-rotate text-base"></i></button>
+                <button onclick="openLeaderboardResetModal()" class="px-3 h-10 flex items-center gap-1.5 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-white hover:from-amber-600 hover:to-orange-600 transition shadow-sm text-xs font-black btn-3d" title="Tạo mới / Reset Đợt Bảng Vàng"><i class="fa-solid fa-wand-magic-sparkles text-sm"></i> <span class="hidden sm:inline">TẠO MỚI (RESET)</span></button>
+                <button onclick="document.getElementById('leaderboard-modal').classList.add('hidden')" class="text-slate-400 hover:text-red-500 text-2xl w-10 h-10 flex items-center justify-center rounded-full bg-slate-100 shrink-0 transition"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <div class="text-center shrink-0 border-b border-slate-100 pb-4 mb-4 relative overflow-hidden rounded-xl pt-2">
+                <div class="absolute inset-0 bg-gradient-to-r from-amber-100 via-orange-100 to-amber-100 opacity-50 z-0 shine-anim"></div>
+                <div class="relative z-10 p-2">
+                    <div class="w-20 h-20 bg-amber-100 text-amber-500 rounded-full flex items-center justify-center text-4xl mx-auto mb-3 shadow-inner"><i class="fa-solid fa-trophy animate-bounce"></i></div>
+                    <h3 class="text-3xl font-black text-slate-800 uppercase tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-600">BẢNG VÀNG VINH DỰ</h3>
+                    <p class="text-sm text-slate-500 font-bold mt-1 mb-2">TOP ĐIỂM CAO NHẤT TOÀN TRƯỜNG</p>
+                    
+                    <!-- Cycle Info Badge -->
+                    <div class="mb-3">
+                        <div id="leaderboard-cycle-badge" class="inline-flex items-center gap-2 px-3.5 py-1 bg-white/90 border border-amber-300 rounded-full text-xs font-bold text-amber-900 shadow-sm">
+                            <i class="fa-solid fa-flag-checkered text-amber-600"></i>
+                            <span id="leaderboard-cycle-text">Đang tải thông tin đợt thi...</span>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-center flex-wrap gap-2 items-center">
+                        <select id="leaderboard-code-filter" onchange="fetchLeaderboard()" class="px-3 py-1.5 rounded-full text-xs font-bold bg-white text-slate-700 border-2 border-amber-300 outline-none shadow-sm cursor-pointer hover:border-amber-400 transition">
+                            <option value="ALL">🎯 Tất cả Mã Đề</option>
+                        </select>
+                        <button id="btn-lb-cycle" onclick="setLeaderboardFilter('cycle')" class="px-4 py-1.5 rounded-full text-xs font-bold bg-amber-500 text-white shadow-md transition-all"><i class="fa-solid fa-fire mr-1"></i>Đợt này</button>
+                        <button id="btn-lb-week" onclick="setLeaderboardFilter('week')" class="px-4 py-1.5 rounded-full text-xs font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all">Tuần này</button>
+                        <button id="btn-lb-month" onclick="setLeaderboardFilter('month')" class="px-4 py-1.5 rounded-full text-xs font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all">Tháng này</button>
+                        <button id="btn-lb-all" onclick="setLeaderboardFilter('all')" class="px-4 py-1.5 rounded-full text-xs font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all">Tất cả lịch sử</button>
+                    </div>
+                </div>
+            </div>
+            <div class="flex-grow overflow-y-auto admin-scroll pr-2 relative bg-slate-50 rounded-xl p-2 border border-slate-100 shadow-inner min-h-[300px]">
+                <div id="leaderboard-loading" class="absolute inset-0 bg-white/80 z-10 flex flex-col items-center justify-center rounded-xl"><i class="fa-solid fa-spinner fa-spin text-4xl text-amber-500 mb-2"></i><span class="font-bold text-slate-500">Đang cập nhật dữ liệu...</span></div>
+                <div id="leaderboard-list" class="space-y-3 pb-2"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Tạo Mới / Reset Bảng Vàng -->
+    <div id="leaderboard-reset-modal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[10002] hidden flex items-center justify-center p-4">
+        <div class="bg-white p-6 md:p-8 rounded-3xl w-full max-w-lg relative shadow-2xl border-4 border-amber-200 zoom-in flex flex-col">
+            <button onclick="closeLeaderboardResetModal()" class="absolute top-4 right-4 text-slate-400 hover:text-red-500 text-2xl w-10 h-10 flex items-center justify-center rounded-full bg-slate-100 transition"><i class="fa-solid fa-xmark"></i></button>
+            <div class="w-16 h-16 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center text-3xl mx-auto mb-3 shadow-inner">
+                <i class="fa-solid fa-arrows-rotate"></i>
+            </div>
+            <h3 class="text-2xl font-black text-slate-800 text-center uppercase tracking-wide mb-1">Tạo Mới Bảng Vàng</h3>
+            <p class="text-xs text-slate-500 text-center font-bold mb-4">Bắt đầu một đợt thi đua / vinh danh mới</p>
+
+            <div class="bg-amber-50 p-4 rounded-2xl border border-amber-200 text-xs text-amber-900 mb-4 leading-relaxed font-medium">
+                <i class="fa-solid fa-circle-info text-amber-600 mr-1.5"></i> Khi <b>Tạo mới (Reset)</b>, bảng vàng sẽ chỉ tính điểm các bài thi nộp từ mốc thời gian này trở đi. Toàn bộ lịch sử thi trong Google Sheets vẫn được lưu giữ an toàn.
+            </div>
+
+            <div class="space-y-4 mb-6">
+                <div>
+                    <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-1">Tên đợt vinh danh / Kỳ thi:</label>
+                    <input type="text" id="lb-reset-cycle-title" class="w-full p-3 border-2 border-slate-200 rounded-xl focus:border-amber-500 outline-none font-bold text-slate-700 text-sm shadow-inner" placeholder="VD: Đợt thi thử Tháng 8 / Khảo sát tuần 3...">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-1">Mốc thời gian bắt đầu tính điểm:</label>
+                    <div class="grid grid-cols-2 gap-2 mb-2">
+                        <button type="button" onclick="setLbResetTimeMode('now')" id="btn-reset-time-now" class="py-2.5 rounded-xl text-xs font-bold bg-amber-500 text-white shadow transition-all">Ngay bây giờ</button>
+                        <button type="button" onclick="setLbResetTimeMode('custom')" id="btn-reset-time-custom" class="py-2.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all">Tùy chọn ngày giờ</button>
+                    </div>
+                    <div id="lb-custom-time-container" class="hidden mt-2">
+                        <input type="datetime-local" id="lb-reset-custom-time" class="w-full p-3 border-2 border-slate-200 rounded-xl focus:border-amber-500 outline-none font-bold text-slate-700 text-sm shadow-inner">
+                    </div>
+                </div>
+
+                <div id="lb-auth-pin-container" class="hidden">
+                    <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-1"><i class="fa-solid fa-key mr-1 text-amber-500"></i>Mã xác thực Giáo viên / Admin:</label>
+                    <input type="password" id="lb-reset-auth-pin" class="w-full p-3 border-2 border-slate-200 rounded-xl focus:border-amber-500 outline-none font-black text-center text-lg tracking-widest text-slate-800 shadow-inner" placeholder="••••••">
+                    <p class="text-[11px] text-slate-400 mt-1 italic">Nhập mã xác thực của giáo viên để xác nhận tạo mới.</p>
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-2">
+                <button id="btn-confirm-lb-reset" onclick="confirmLeaderboardReset()" class="w-full py-3.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-black rounded-xl shadow-lg hover:from-amber-600 hover:to-orange-600 transition text-base btn-3d"><i class="fa-solid fa-wand-magic-sparkles mr-2"></i> XÁC NHẬN TẠO MỚI</button>
+                <div class="flex gap-2 mt-1">
+                    <button type="button" onclick="clearLeaderboardReset()" class="flex-1 py-2.5 bg-slate-100 hover:bg-rose-50 hover:text-rose-600 text-slate-600 font-bold rounded-xl transition text-xs border border-slate-200" title="Khôi phục tính điểm toàn bộ lịch sử"><i class="fa-solid fa-rotate-left mr-1"></i> Khôi phục Toàn Thời Gian</button>
+                    <button type="button" onclick="closeLeaderboardResetModal()" class="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-xl transition text-xs">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Whiteboard Modal -->
+    <div id="whiteboard-modal" class="fixed inset-0 bg-slate-900/90 backdrop-blur-md z-[10005] hidden flex items-center justify-center p-2 md:p-6 fade-in">
+        <div class="bg-white rounded-2xl md:rounded-3xl w-full h-full relative shadow-2xl overflow-hidden flex flex-col border border-slate-200 zoom-in">
+            <div class="h-12 bg-slate-100 border-b border-slate-200 flex items-center justify-between px-4 shrink-0">
+                <div class="flex items-center gap-2 text-indigo-600 font-bold">
+                    <i class="fa-solid fa-chalkboard"></i> Bảng Phụ / Nháp
+                </div>
+                <button onclick="document.getElementById('whiteboard-modal').classList.add('hidden')" class="text-slate-400 hover:text-red-500 text-xl w-8 h-8 flex items-center justify-center rounded-full bg-white shadow-sm hover:shadow transition-all"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <iframe src="bang_trang.html" class="w-full flex-grow border-none"></iframe>
+        </div>
+    </div>
+
+    <!-- Off-canvas drawer for Practice Exams -->
+    <div id="practice-drawer-overlay" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[10010] hidden transition-opacity" onclick="togglePracticeMenu(event)"></div>
+    <div id="practice-drawer" class="fixed top-0 left-0 h-full w-80 max-w-[85vw] bg-white z-[10011] shadow-2xl transform -translate-x-full transition-transform duration-300 ease-in-out flex flex-col">
+        <div class="p-5 border-b border-slate-100 flex items-center justify-between bg-gradient-to-r from-sky-50 to-white">
+            <h2 class="font-black text-sky-700 text-lg uppercase tracking-widest"><i class="fa-solid fa-book-journal-whills mr-2"></i> Đề Luyện Tập</h2>
+            <button onclick="togglePracticeMenu(event)" class="text-slate-400 hover:text-red-500 transition w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm"><i class="fa-solid fa-xmark text-xl"></i></button>
+        </div>
+        <div id="practice-drawer-content" class="flex-grow overflow-y-auto admin-scroll p-4 space-y-4 bg-slate-50">
+            <div class="text-center text-slate-400 mt-10"><i class="fa-solid fa-spinner fa-spin text-3xl mb-2"></i><br>Đang tải dữ liệu...</div>
+        </div>
+    </div>
+
+    <script>
+        // CONFIG & FIREBASE INIT (Moved to config.js)
+
+        let practiceMenuLoaded = false;
+        function togglePracticeMenu(e) {
+            if(e) e.stopPropagation();
+            const drawer = document.getElementById('practice-drawer');
+            const overlay = document.getElementById('practice-drawer-overlay');
+            
+            if (drawer.classList.contains('-translate-x-full')) {
+                drawer.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+                if (!practiceMenuLoaded) loadPracticeExams();
+            } else {
+                drawer.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            }
+        }
+
+        async function loadPracticeExams() {
+            let container = document.getElementById('practice-drawer-content');
+            try {
+                let snap = await db.collection("AdminHistory").orderBy('createdAt', 'desc').get();
+                let hist = [];
+                snap.forEach(doc => hist.push(doc.data()));
+                
+                let d = await db.collection("GameData").doc("AdminHistory").get();
+                if (d.exists) {
+                    let oldHist = d.data().list || [];
+                    hist = [...hist, ...oldHist];
+                }
+
+                let uniqueHist = [];
+                let seen = new Set();
+                for (let h of hist) {
+                    if(!seen.has(h.code)) {
+                        seen.add(h.code);
+                        uniqueHist.push(h);
+                    }
+                }
+
+                if (uniqueHist.length === 0) {
+                    container.innerHTML = `<div class="text-center text-slate-400 mt-10"><i class="fa-solid fa-box-open text-4xl mb-3 text-slate-300"></i><br><b class="text-slate-500">Chưa có đề luyện tập nào.</b></div>`;
+                    return;
+                }
+
+                let grouped = {};
+                uniqueHist.forEach(h => {
+                    let folder = h.folder || 'Chung';
+                    if (!grouped[folder]) grouped[folder] = [];
+                    grouped[folder].push(h);
+                });
+
+                let html = '';
+                for (let folder of Object.keys(grouped).sort()) {
+                    html += `
+                        <div class="mb-5 bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                            <h3 class="font-black text-slate-700 bg-slate-100/80 px-4 py-3 text-sm uppercase tracking-wider border-b border-slate-100 flex items-center justify-between cursor-pointer hover:bg-slate-200/60 transition" onclick="this.nextElementSibling.classList.toggle('hidden')">
+                                <span class="flex items-center"><i class="fa-solid fa-folder-open text-amber-500 mr-2 text-lg"></i> ${folder}</span>
+                                <span class="bg-white text-slate-500 text-xs font-bold px-2.5 py-0.5 rounded-full border border-slate-200 shadow-sm">${grouped[folder].length}</span>
+                            </h3>
+                            <div class="p-3 space-y-2 hidden">
+                                ${grouped[folder].map(h => `
+                                    <button onclick="window.location.href='student.html?code=${h.code}'" class="w-full text-left p-3 bg-white border border-slate-200 rounded-xl hover:border-sky-400 hover:bg-sky-50 hover:shadow-md transition group relative overflow-hidden btn-3d">
+                                        <div class="font-bold text-slate-700 text-sm group-hover:text-sky-800 leading-tight mb-2 pr-2">${h.name}</div>
+                                        <div class="flex justify-between items-center">
+                                            <span class="text-[11px] font-mono font-black text-sky-700 bg-sky-100 px-2 py-1 rounded shadow-inner tracking-widest">${h.code}</span>
+                                            <span class="text-[10px] font-bold text-slate-400"><i class="fa-solid fa-calendar-day mr-1"></i>${h.date}</span>
+                                        </div>
+                                    </button>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                container.innerHTML = html;
+                practiceMenuLoaded = true;
+            } catch (e) {
+                container.innerHTML = `<div class="text-center text-red-400 mt-10"><i class="fa-solid fa-triangle-exclamation text-4xl mb-3 text-red-300"></i><br><b class="text-red-500">Lỗi tải dữ liệu.</b></div>`;
+            }
+        }
+
+        const DEFAULT_GLOBAL_LINKS = [
+            { title: "Máy tính Desmos", url: "https://www.desmos.com/calculator", icon: "fa-solid fa-calculator" },
+            { title: "PDF convert", url: "https://hotrohoctap.com/1ai/40pdf", icon: "fa-solid fa-file-pdf" },
+            { title: "GDRhungtbs", url: "https://drive.google.com/drive/home", icon: "fa-solid fa-hard-drive" },
+            { title: "GIẢI TOÁN", url: "https://gemini.google.com/gem/6d15b22593eb", icon: "fa-solid fa-robot" },
+            { title: "TẠO NGÂN HÀNG", url: "https://mathtbsai.netlify.app/teacher", icon: "fa-solid fa-folder-plus" },
+            { title: "LÀM KIỂM TRA", url: "https://mathtbsai.netlify.app/student", icon: "fa-solid fa-pen-to-square" },
+            { title: "Chuyển đổi Markdown", url: "https://dayhoc.id.vn/1chd/4markdown.html", icon: "fa-solid fa-file-code" },
+            { title: "TRỢ LÍ GA THPT", url: "https://gemini.google.com/gem/4bb8fbceb873", icon: "fa-solid fa-wand-magic-sparkles" },
+            { title: "GIẢI ĐỀ THPT", url: "https://gemini.google.com/gem/12vf68g60eb", icon: "fa-solid fa-graduation-cap" }
+        ];
+
+        let state = {
+            currentUser: null,
+            authorizedEmails: [SUPER_ADMIN_EMAIL],
+            allResultsData: []
+        };
+        let savedLinks = [...DEFAULT_GLOBAL_LINKS];
+
+        function applyHamburgerMenuVisibility() {
+            let show = localStorage.getItem('showHamburgerMenu') !== 'false';
+            let btn = document.getElementById('btn-hamburger-menu');
+            if (btn) {
+                btn.style.display = show ? '' : 'none';
+            }
+        }
+
+        function initApp() {
+            applyHamburgerMenuVisibility();
+            navTo('home'); // Render giao diện ngay lập tức (0ms delay)
+
+            // Tải dữ liệu Firebase bất đồng bộ không làm nghẽn UI
+            try {
+                if (window.db) {
+                    db.collection("GameData").doc("SystemSettings").onSnapshot(doc => {
+                        if (doc.exists && doc.data().showHamburgerMenu !== undefined) {
+                            let isShow = doc.data().showHamburgerMenu;
+                            localStorage.setItem('showHamburgerMenu', isShow ? 'true' : 'false');
+                            applyHamburgerMenuVisibility();
+                        }
+                    }, err => {});
+
+                    db.collection("GameData").doc("GlobalLinks").get().then(d => {
+                        if (d.exists && Array.isArray(d.data().list) && d.data().list.length > 0) {
+                            savedLinks = d.data().list;
+                            let activeNav = document.querySelector('nav button.tab-active');
+                            if (activeNav && activeNav.id === 'nav-links') renderLinks();
+                        }
+                    }).catch(e => {});
+
+                    db.collection("GameData").doc("AuthorizedTeachers").get().then(authDoc => {
+                        if(authDoc.exists) state.authorizedEmails = authDoc.data().list;
+                    }).catch(e => {});
+                }
+            } catch(e){}
+
+            if (window.firebase && firebase.auth) {
+                firebase.auth().onAuthStateChanged((user) => {
+                    state.currentUser = user;
+                    let userInfo = document.getElementById('user-info-display');
+                    if (user) {
+                        if(userInfo) { 
+                            let avatar = document.getElementById('user-avatar');
+                            let userEmail = document.getElementById('user-email');
+                            if (avatar && user.photoURL) avatar.src = user.photoURL; 
+                            if (userEmail) userEmail.innerText = user.email; 
+                            userInfo.classList.remove('hidden'); 
+                            userInfo.classList.add('flex'); 
+                        }
+                    } else {
+                        if(userInfo) { userInfo.classList.add('hidden'); userInfo.classList.remove('flex'); }
+                    }
+                    
+                    let activeNav = document.querySelector('nav button.tab-active');
+                    if (activeNav) {
+                        let navId = activeNav.id.replace('nav-', '');
+                        if (navId === 'links') renderLinks();
+                        else if (navId === 'board') renderBoard();
+                        else if (navId === 'guide') renderGuide();
+                        else renderHomeScreen();
+                    } else {
+                        renderHomeScreen();
+                    }
+                });
+            }
+        }
+
+        if (document.readyState === 'complete' || document.readyState === 'interactive') {
+            initApp();
+        } else {
+            document.addEventListener('DOMContentLoaded', initApp);
+            window.addEventListener('load', initApp);
+        }
+
+        // showToast is moved to config.js
+
+        function openTeacherLoginModal() {
+            let modal = document.getElementById('teacher-login-modal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                let input = document.getElementById('teacher-login-pin');
+                if (input) { input.value = ''; input.focus(); }
+            }
+        }
+
+        function closeTeacherLoginModal() {
+            let modal = document.getElementById('teacher-login-modal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        }
+
+        function loginWithPin() {
+            let pin = document.getElementById('teacher-login-pin')?.value.trim();
+            if (!pin) {
+                return showToast("Vui lòng nhập mã PIN Giáo viên!", true);
+            }
+            if (pin === '123456' || pin === 'tbs2025' || pin === 'admin' || pin === 'tbsmath') {
+                localStorage.setItem('devModeBypass', 'true');
+                showToast("Đăng nhập Giáo viên thành công!");
+                closeTeacherLoginModal();
+                setTimeout(() => {
+                    window.location.href = 'teacher.html';
+                }, 400);
+            } else {
+                showToast("Mã PIN không đúng! (Mặc định: 123456 hoặc tbs2025)", true);
+            }
+        }
+
+        async function loginWithGoogle() { 
+            try { 
+                if (!window.firebase || !firebase.auth) throw new Error("Firebase Auth chưa sẵn sàng");
+                let provider = new firebase.auth.GoogleAuthProvider();
+                await firebase.auth().signInWithPopup(provider); 
+                showToast("Đăng nhập Google thành công!"); 
+            } catch(e) { 
+                showToast("Google Auth chưa duyệt domain. Đang mở nhập PIN Giáo viên...", true); 
+                openTeacherLoginModal();
+            } 
+        }
+
+        async function logoutGoogle() { 
+            if (localStorage.getItem('devModeBypass') === 'true') {
+                localStorage.removeItem('devModeBypass');
+                showToast("Đã đăng xuất!");
+                setTimeout(() => window.location.reload(), 400);
+                return;
+            }
+            try { await firebase.auth().signOut(); showToast("Đã đăng xuất!"); } 
+            catch(e) { showToast("Lỗi đăng xuất", true); } 
+        }
+
+        function navTo(screen) { 
+            ['board', 'home', 'links', 'guide'].forEach(id => { 
+                let navBtn = document.getElementById('nav-' + id); 
+                if (navBtn) { if (screen === id) navBtn.classList.add('tab-active'); else navBtn.classList.remove('tab-active'); } 
+            });
+            if(screen === 'home') renderHomeScreen(); 
+            else if(screen === 'board') renderBoard();
+            else if(screen === 'links') renderLinks(); 
+            else if(screen === 'guide') renderGuide();
+        }
+
+        // ======================= VIEW RENDERERS =======================
+        function renderHomeScreen() {
+            let isDev = localStorage.getItem('devModeBypass') === 'true';
+            let teacherBlock = (state.currentUser || isDev)
+                ? `<button onclick="window.location.href='teacher.html'" class="w-full py-3 bg-main text-white rounded-xl font-black shadow-md hover:bg-mainDark transition">VÀO PHÂN HỆ GIÁO VIÊN</button>
+                   <button onclick="logoutGoogle()" class="w-full mt-3 py-2 bg-slate-200 rounded-xl font-bold hover:bg-slate-300 transition text-sm">Đăng xuất</button>`
+                : `<button onclick="openTeacherLoginModal()" class="w-full py-3 bg-white border border-slate-300 rounded-xl font-black shadow-md flex justify-center items-center gap-2 hover:bg-slate-50 transition"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-5 h-5"> ĐĂNG NHẬP (GIÁO VIÊN)</button>`;
+
+            document.getElementById('app-content').innerHTML = `
+                <div class="glass-panel p-8 md:p-12 rounded-3xl w-full max-w-5xl text-center fade-in border-t-4 border-main">
+                    <h1 class="text-2xl md:text-3xl lg:text-4xl font-display font-black text-main mb-6 uppercase tracking-wider leading-tight">TRƯỜNG TH, THCS VÀ THPT THANH BÌNH</h1>
+                    <div class="flex justify-center mb-6">
+                        <img src="logo.png" alt="Logo TBS" onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMGVhNWU5IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTEyIDJMMiA3bDEwIDUgMTAtNXMtMS0yLjUtMS01LS40LTUtMS01eiIvPjwvc3ZnPg==';" class="w-32 h-32 rounded-full shadow-xl object-contain bg-white p-2 border-4 border-white">
+                    </div>
+                    <p class="text-slate-600 font-bold mb-10 text-lg md:text-xl">Nền tảng Ôn tập & Kiểm tra trực tuyến</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+                        <div class="bg-gradient-to-br from-emerald-50 to-teal-100 p-6 rounded-2xl shadow-md border border-emerald-200 relative overflow-hidden group hover:shadow-xl transition-all duration-300">
+                            <div class="absolute -right-4 -top-4 text-emerald-500/10 text-8xl transition-transform group-hover:scale-110"><i class="fa-solid fa-graduation-cap"></i></div>
+                            <h2 class="text-xl font-black text-emerald-800 mb-2 relative z-10">KHU VỰC HỌC SINH</h2>
+                            <p class="text-emerald-600 font-medium mb-4 relative z-10 text-xs">Nhập mã bài thi để làm bài cá nhân</p>
+                            <input type="text" id="play-code-input" class="w-full p-3 border-2 border-emerald-300 rounded-xl focus:border-main outline-none font-black text-center text-2xl tracking-widest text-emerald-700 uppercase mb-4 shadow-inner relative z-10 bg-white" placeholder="MÃ ĐỀ THI" maxlength="6" onkeypress="if(event.key === 'Enter') handlePlayCode()">
+                            <button id="btn-play-code" onclick="handlePlayCode()" class="w-full py-3 bg-main text-white rounded-xl font-black shadow-md hover:bg-mainDark hover:scale-105 transition relative z-10 text-base"><i class="fa-solid fa-play mr-2"></i> VÀO THI NGAY</button>
+                        </div>
+                        
+                        <div class="bg-gradient-to-br from-amber-50 to-orange-100 p-6 rounded-2xl shadow-md border border-amber-200 relative overflow-hidden group hover:shadow-xl transition-all duration-300 flex flex-col">
+                            <div class="absolute -right-4 -top-4 text-amber-500/10 text-8xl transition-transform group-hover:scale-110"><i class="fa-solid fa-magnifying-glass"></i></div>
+                            <h2 class="text-xl font-black text-amber-800 mb-2 relative z-10">TRA CỨU KẾT QUẢ</h2>
+                            <p class="text-amber-600 font-medium mb-4 relative z-10 text-xs">Xem điểm & Vinh danh toàn trường</p>
+                            <div class="flex-grow"></div>
+                            <div class="flex flex-col gap-2 relative z-10">
+                                <button onclick="openLookupModal()" class="w-full py-3 bg-white border border-main text-main rounded-xl font-black shadow-sm hover:bg-mainLight transition text-sm"><i class="fa-solid fa-magnifying-glass mr-2"></i> CÁ NHÂN</button>
+                                <button onclick="openLeaderboardModal()" class="w-full py-3 bg-main text-white rounded-xl font-black shadow-md hover:bg-mainDark hover:scale-105 transition text-base"><i class="fa-solid fa-trophy mr-2"></i> BẢNG VÀNG</button>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gradient-to-br from-indigo-50 to-violet-100 p-6 rounded-2xl shadow-md border border-indigo-200 relative overflow-hidden group hover:shadow-xl transition-all duration-300 flex flex-col justify-center">
+                            <div class="absolute -left-4 -bottom-4 text-indigo-500/10 text-8xl transition-transform group-hover:scale-110"><i class="fa-solid fa-chalkboard-user"></i></div>
+                            <h2 class="text-xl font-black text-indigo-800 mb-2 relative z-10">GIÁO VIÊN & ADMIN</h2>
+                            <div class="relative z-10">${teacherBlock}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // CHUYỂN HƯỚNG SANG FILE STUDENT.HTML
+        async function handlePlayCode() {
+            let code = document.getElementById('play-code-input')?.value.trim().toUpperCase(); 
+            if(!code) return showToast("Nhập mã đề thi!", true);
+            
+            let btn = document.getElementById('btn-play-code');
+            if (btn) {
+                btn.innerHTML='<i class="fa-solid fa-spinner fa-spin mr-2"></i> ĐANG KIỂM TRA...'; 
+                btn.disabled=true;
+            }
+            
+            try {
+                let getPromise = db.collection("SharedGames").doc(code).get();
+                let timeoutPromise = new Promise((_, reject) => 
+                    setTimeout(() => reject(new Error("Kết nối quá thời gian. Đang chuyển thẳng sang bài thi...")), 5000)
+                );
+                
+                let snap = await Promise.race([getPromise, timeoutPromise]); 
+                if(!snap.exists) throw new Error("Mã đề thi sai hoặc đã bị xóa!");
+                
+                let settings = snap.data().settings || {};
+                if(settings.openTime && new Date() < new Date(settings.openTime)) throw new Error("Chưa đến giờ mở đề thi này!");
+                if(settings.closeTime && new Date() > new Date(settings.closeTime)) throw new Error("Đề thi này đã đóng!");
+                
+                showToast("Mã hợp lệ, đang chuyển hướng...");
+                setTimeout(() => {
+                    window.location.href = `student.html?code=${code}`;
+                }, 500);
+
+            } catch(e) { 
+                if (e.message && e.message.includes("quá thời gian")) {
+                    showToast("Đang chuyển sang bài thi...", false);
+                    setTimeout(() => {
+                        window.location.href = `student.html?code=${code}`;
+                    }, 500);
+                } else {
+                    showToast(e.message, true); 
+                    if (btn) {
+                        btn.innerHTML='<i class="fa-solid fa-play mr-2"></i> VÀO THI NGAY'; 
+                        btn.disabled=false; 
+                    }
+                }
+            }
+        }
+
+        // ======================= LOGIC TRA CỨU =======================
+        function openLookupModal() { document.getElementById('lookup-modal').classList.remove('hidden'); }
+        function closeLookupModal() { document.getElementById('lookup-modal').classList.add('hidden'); }
+        
+        let currentLookupScope = 'personal';
+        function setLookupScope(scope) {
+            currentLookupScope = scope;
+            let btns = ['personal', 'class', 'grade', 'school'];
+            btns.forEach(b => {
+                let el = document.getElementById('btn-scope-' + b);
+                if(b === scope) { el.classList.add('bg-amber-500', 'text-white', 'shadow'); el.classList.remove('bg-slate-100', 'text-slate-600'); }
+                else { el.classList.remove('bg-amber-500', 'text-white', 'shadow'); el.classList.add('bg-slate-100', 'text-slate-600'); }
+            });
+            let inp = document.getElementById('lookup-input');
+            let cont = document.getElementById('lookup-input-container');
+            cont.classList.remove('hidden');
+            if(scope === 'personal') { inp.placeholder = "Nhập ID học sinh..."; inp.value = ""; }
+            else if(scope === 'class') { inp.placeholder = "Nhập Tên Lớp (vd: 12A1)..."; inp.value = ""; }
+            else if(scope === 'grade') { inp.placeholder = "Nhập Khối (vd: 12)..."; inp.value = ""; }
+            else if(scope === 'school') { cont.classList.add('hidden'); }
+        }
+
+        async function performLookup() {
+            let val = document.getElementById('lookup-input').value.trim();
+            if(currentLookupScope !== 'school' && !val) return showToast("Vui lòng nhập thông tin tra cứu!", true);
+            let btn = document.getElementById('btn-lookup'); 
+            let oldHtml = btn ? btn.innerHTML : ''; 
+            if (btn) {
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>Đang tìm...'; 
+                btn.disabled = true;
+            }
+            try {
+                let fetchPromise = fetch(GOOGLE_WEB_APP_URL + "?action=getResults&t=" + Date.now());
+                let timeoutPromise = new Promise((_, reject) => 
+                    setTimeout(() => reject(new Error("Kết nối máy chủ tra cứu quá thời gian (Timeout). Vui lòng thử lại!")), 8000)
+                );
+                let res = await Promise.race([fetchPromise, timeoutPromise]); 
+                if (!res.ok) throw new Error("Lỗi phản hồi máy chủ Google Sheets (" + res.status + ")");
+                let textData = await res.text();
+                let allResults = JSON.parse(textData); 
+                let filtered = [];
+                if(currentLookupScope === 'personal') { filtered = allResults.filter(r => String(r.id || '').trim().toLowerCase() === val.toLowerCase()); }
+                else if(currentLookupScope === 'class') { filtered = allResults.filter(r => String(r.cls || r.class || '').trim().toLowerCase() === val.toLowerCase()); }
+                else if(currentLookupScope === 'grade') { filtered = allResults.filter(r => String(r.khoi || r.grade || '').trim() === val); }
+                else if(currentLookupScope === 'school') { filtered = allResults; }
+                
+                if (filtered.length === 0) { showToast("Không tìm thấy kết quả nào!", true); } 
+                else { closeLookupModal(); renderGroupResultsModal(filtered, currentLookupScope, val); }
+            } catch(e) { 
+                showToast("Lỗi tra cứu: " + e.message, true); 
+            } finally { 
+                if (btn) {
+                    btn.innerHTML = oldHtml; 
+                    btn.disabled = false; 
+                }
+            }
+        }
+
+        function extractPartScore(r, partNum) {
+            if (!r) return '-';
+            let val = undefined;
+            if (partNum === 1) val = r.scoreR1 ?? r.score1 ?? r.r1 ?? r.R1 ?? r.ScoreR1 ?? r.Score1 ?? r["Phần 1"] ?? r["Phần I"] ?? r["phan1"];
+            else if (partNum === 2) val = r.scoreR2 ?? r.score2 ?? r.r2 ?? r.R2 ?? r.ScoreR2 ?? r.Score2 ?? r["Phần 2"] ?? r["Phần II"] ?? r["phan2"];
+            else if (partNum === 3) val = r.scoreR3 ?? r.score3 ?? r.r3 ?? r.R3 ?? r.ScoreR3 ?? r.Score3 ?? r["Phần 3"] ?? r["Phần III"] ?? r["phan3"];
+
+            if (val === undefined || val === null || String(val).trim() === '') {
+                for (let k in r) {
+                    let norm = k.toLowerCase().replace(/[^a-z0-9]/g, '');
+                    if (partNum === 1 && (norm === 'scorer1' || norm === 'r1' || norm === 'phan1' || norm === 'phani' || norm === 'score1')) return r[k];
+                    if (partNum === 2 && (norm === 'scorer2' || norm === 'r2' || norm === 'phan2' || norm === 'phanii' || norm === 'score2')) return r[k];
+                    if (partNum === 3 && (norm === 'scorer3' || norm === 'r3' || norm === 'phan3' || norm === 'phaniii' || norm === 'score3')) return r[k];
+                }
+            }
+            return (val !== undefined && val !== null && String(val).trim() !== '') ? val : '-';
+        }
+
+        let currentGroupResultsData = [];
+        let currentGroupTitle = '';
+        function renderGroupResultsModal(rawResults, scope, val) { 
+            let title = '';
+            if(scope === 'personal') title = `Học sinh: ${rawResults[0].name !== 'Khách' && rawResults[0].name ? rawResults[0].name : 'ID ' + val}`;
+            else if(scope === 'class') title = `Kết quả Lớp: ${val}`;
+            else if(scope === 'grade') title = `Kết quả Khối: ${val}`;
+            else if(scope === 'school') title = `Kết quả Toàn trường`;
+            
+            document.getElementById('personal-results-name').innerText = title;
+            currentGroupTitle = title;
+            let isPersonal = (scope === 'personal');
+            
+            let groupedData = {};
+            rawResults.forEach(r => {
+                let code = String(r.code).trim().toUpperCase(); 
+                let sId = String(r.id || '').trim().toLowerCase();
+                let key = isPersonal ? code : `${sId}_${String(r.name || '').trim().toLowerCase()}_${code}`;
+                
+                let currentScore = Number(r.score) || 0;
+                let sR1 = extractPartScore(r, 1);
+                let sR2 = extractPartScore(r, 2);
+                let sR3 = extractPartScore(r, 3);
+                let rViolations = Number(r.violations) || 0;
+
+                if (!groupedData[key]) { 
+                    groupedData[key] = { 
+                        ...r, 
+                        attempts: 1, 
+                        maxScore: currentScore,
+                        violations: rViolations,
+                        scoreR1: sR1,
+                        scoreR2: sR2,
+                        scoreR3: sR3
+                    }; 
+                } else { 
+                    groupedData[key].attempts += 1; 
+                    groupedData[key].violations = Math.max(groupedData[key].violations || 0, rViolations);
+                    if (currentScore >= groupedData[key].maxScore) { 
+                        groupedData[key].maxScore = currentScore; 
+                        groupedData[key].scoreR1 = sR1; 
+                        groupedData[key].scoreR2 = sR2; 
+                        groupedData[key].scoreR3 = sR3; 
+                        groupedData[key].date = r.date; 
+                    } else {
+                        if (groupedData[key].scoreR1 === '-' && sR1 !== '-') groupedData[key].scoreR1 = sR1;
+                        if (groupedData[key].scoreR2 === '-' && sR2 !== '-') groupedData[key].scoreR2 = sR2;
+                        if (groupedData[key].scoreR3 === '-' && sR3 !== '-') groupedData[key].scoreR3 = sR3;
+                    }
+                }
+            });
+            let finalResults = Object.values(groupedData);
+            finalResults.sort((a,b) => b.maxScore - a.maxScore);
+            currentGroupResultsData = finalResults;
+            
+            let thHtml = '';
+            if(isPersonal) {
+                thHtml = `<th class="p-4 text-center">Ngày Thi</th><th class="p-4 text-center">Mã Đề</th><th class="p-4 text-center">Số Lần Làm</th><th class="p-4 text-center text-rose-300">Vi Phạm</th>`;
+            } else {
+                thHtml = `<th class="p-4 text-left">Họ Tên</th><th class="p-4 text-center">Lớp</th><th class="p-4 text-center">Mã Đề</th><th class="p-4 text-center">Số Lần Làm</th><th class="p-4 text-center text-rose-300">Vi Phạm</th>`;
+            }
+            
+            document.getElementById('personal-results-thead').innerHTML = `<tr class="bg-gradient-to-r from-slate-800 to-slate-700 text-white font-bold text-[10px] md:text-xs uppercase tracking-wider sticky top-0 shadow-md z-10">${thHtml}<th class="p-4 text-center text-sky-300">Phần 1</th><th class="p-4 text-center text-amber-300">Phần 2</th><th class="p-4 text-center text-red-300">Phần 3</th><th class="p-4 text-center text-emerald-300">Tổng</th></tr>`;
+
+            document.getElementById('personal-results-tbody').innerHTML = finalResults.map((r) => {
+                let tdHtml = '';
+                if(isPersonal) {
+                    tdHtml = `<td class="p-3 text-center text-slate-600">${r.date || '-'}</td><td class="p-3 text-center font-bold text-indigo-600 bg-indigo-50/50">${r.code}</td><td class="p-3 text-center font-bold text-rose-500">${r.attempts} lần</td><td class="p-3 text-center font-bold ${r.violations > 0 ? 'text-rose-600 font-black' : 'text-slate-400'}">${r.violations > 0 ? r.violations + ' lần' : '0'}</td>`;
+                } else {
+                    tdHtml = `<td class="p-3 text-left font-bold text-slate-700 whitespace-nowrap">${r.name || r.id}</td><td class="p-3 text-center font-bold text-slate-500">${r.cls || r.class || '-'}</td><td class="p-3 text-center font-bold text-indigo-600 bg-indigo-50/50">${r.code}</td><td class="p-3 text-center font-bold text-rose-500">${r.attempts} lần</td><td class="p-3 text-center font-bold ${r.violations > 0 ? 'text-rose-600 font-black' : 'text-slate-400'}">${r.violations > 0 ? r.violations + ' lần' : '0'}</td>`;
+                }
+                return `<tr class="text-sm border-t hover:bg-slate-50 transition">${tdHtml}<td class="p-3 text-center text-sky-600 font-bold">${r.scoreR1}</td><td class="p-3 text-center text-amber-600 font-bold">${r.scoreR2}</td><td class="p-3 text-center text-red-600 font-bold">${r.scoreR3}</td><td class="p-3 text-center font-black text-xl text-emerald-600 bg-emerald-50/50">${r.maxScore}</td></tr>`;
+            }).join(''); 
+            document.getElementById('personal-results-modal').classList.remove('hidden'); 
+        }
+
+        function exportGroupCSV() {
+            if(currentGroupResultsData.length === 0) return;
+            let isPersonal = (currentLookupScope === 'personal');
+
+            let totalCount = currentGroupResultsData.length;
+            let scores = currentGroupResultsData.map(r => Number(r.maxScore || 0)).filter(s => !isNaN(s));
+            let avgScore = scores.length > 0 ? (scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(2) : 0;
+            let maxScore = scores.length > 0 ? Math.max(...scores) : 0;
+            let minScore = scores.length > 0 ? Math.min(...scores) : 0;
+
+            let csvContent = "\uFEFF";
+            csvContent += `=== BÁO CÁO THỐNG KÊ TRA CỨU (${currentGroupTitle}) ===\n`;
+            csvContent += `Ngày xuất báo cáo: "${new Date().toLocaleDateString('vi-VN')} ${new Date().toLocaleTimeString('vi-VN')}"\n`;
+            csvContent += `Tổng số lượt thi: ${totalCount}\n`;
+            csvContent += `Điểm trung bình: ${avgScore}\n`;
+            csvContent += `Điểm cao nhất: ${maxScore}\n`;
+            csvContent += `Điểm thấp nhất: ${minScore}\n\n`;
+
+            if(isPersonal) {
+                csvContent += "STT,Ngày Thi,Mã Đề,Số Lần Làm,Số Lần Vi Phạm,Phần 1,Phần 2,Phần 3,Tổng Điểm,Xếp Loại\n";
+                currentGroupResultsData.forEach((r, idx) => {
+                    let r1 = r.scoreR1 !== undefined ? r.scoreR1 : '-'; let r2 = r.scoreR2 !== undefined ? r.scoreR2 : '-'; let r3 = r.scoreR3 !== undefined ? r.scoreR3 : '-';
+                    let s = Number(r.maxScore || 0);
+                    let rank = "Yếu";
+                    if (s >= 9.0) rank = "Xuất sắc";
+                    else if (s >= 8.0) rank = "Giỏi";
+                    else if (s >= 6.5) rank = "Khá";
+                    else if (s >= 5.0) rank = "Trung bình";
+
+                    csvContent += `"${idx + 1}","${r.date || '-'}","${r.code}","${r.attempts}","${r.violations || 0}","${r1}","${r2}","${r3}","${r.maxScore}","${rank}"\n`;
+                });
+            } else {
+                csvContent += "STT,Họ Tên,Lớp,Mã Đề,Ngày Thi,Số Lần Làm,Số Lần Vi Phạm,Phần 1,Phần 2,Phần 3,Tổng Điểm,Xếp Loại\n";
+                currentGroupResultsData.forEach((r, idx) => {
+                    let r1 = r.scoreR1 !== undefined ? r.scoreR1 : '-'; let r2 = r.scoreR2 !== undefined ? r.scoreR2 : '-'; let r3 = r.scoreR3 !== undefined ? r.scoreR3 : '-';
+                    let escName = (r.name || r.id || '').replace(/"/g, '""');
+                    let escCls = (r.cls || r.class || '-').replace(/"/g, '""');
+                    let s = Number(r.maxScore || 0);
+                    let rank = "Yếu";
+                    if (s >= 9.0) rank = "Xuất sắc";
+                    else if (s >= 8.0) rank = "Giỏi";
+                    else if (s >= 6.5) rank = "Khá";
+                    else if (s >= 5.0) rank = "Trung bình";
+
+                    csvContent += `"${idx + 1}","${escName}","${escCls}","${r.code}","${r.date || '-'}","${r.attempts}","${r.violations || 0}","${r1}","${r2}","${r3}","${r.maxScore}","${rank}"\n`;
+                });
+            }
+            
+            let blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            let link = document.createElement("a");
+            if (link.download !== undefined) {
+                let url = URL.createObjectURL(blob);
+                link.setAttribute("href", url);
+                link.setAttribute("download", `BaoCaoThongKe_${currentGroupTitle.replace(/\s+/g, '_')}.csv`);
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                showToast("Đã xuất file thống kê thành công!");
+            }
+        }
+
+        // ======================= BẢNG VÀNG =======================
+        let currentLbFilter = 'cycle';
+        let leaderboardConfig = {
+            resetAt: null,
+            resetDateStr: null,
+            resetBy: null,
+            cycleTitle: "Toàn thời gian"
+        };
+
+        async function loadLeaderboardConfig() {
+            try {
+                let doc = await db.collection("GameData").doc("LeaderboardConfig").get();
+                if (doc.exists) {
+                    leaderboardConfig = doc.data() || {};
+                } else {
+                    leaderboardConfig = { resetAt: null, resetDateStr: null, resetBy: null, cycleTitle: "Toàn thời gian" };
+                }
+            } catch(e) {
+                console.warn("Lỗi đọc LeaderboardConfig:", e);
+            }
+        }
+
+        function updateLeaderboardCycleUI() {
+            let textEl = document.getElementById('leaderboard-cycle-text');
+            let btnCycle = document.getElementById('btn-lb-cycle');
+            if (!textEl) return;
+            
+            if (leaderboardConfig && leaderboardConfig.resetAt) {
+                let title = leaderboardConfig.cycleTitle ? `"${leaderboardConfig.cycleTitle}"` : "Đợt hiện tại";
+                let dateStr = leaderboardConfig.resetDateStr || (parseVietnameseDateTime(leaderboardConfig.resetAt) ? parseVietnameseDateTime(leaderboardConfig.resetAt).toLocaleString('vi-VN') : leaderboardConfig.resetAt);
+                textEl.innerHTML = `<span class="text-amber-700 font-bold">${title}</span> <span class="text-slate-500 font-medium">(Bắt đầu: ${dateStr})</span>`;
+                if (btnCycle) btnCycle.classList.remove('hidden');
+            } else {
+                textEl.innerHTML = `<span class="text-slate-500 font-medium">Toàn thời gian (Chưa đặt mốc tạo mới)</span>`;
+                if (btnCycle) {
+                    btnCycle.classList.add('hidden');
+                    if (currentLbFilter === 'cycle') currentLbFilter = 'all';
+                }
+            }
+        }
+
+        function setLeaderboardFilter(filter) {
+            currentLbFilter = filter;
+            let btns = ['cycle', 'week', 'month', 'all'];
+            btns.forEach(b => {
+                let el = document.getElementById('btn-lb-' + b);
+                if (!el) return;
+                if (b === filter) {
+                    el.classList.add('bg-amber-500', 'text-white', 'shadow-md');
+                    el.classList.remove('bg-slate-100', 'text-slate-600');
+                } else {
+                    el.classList.remove('bg-amber-500', 'text-white', 'shadow-md');
+                    el.classList.add('bg-slate-100', 'text-slate-600');
+                }
+            });
+            fetchLeaderboard();
+        }
+
+        async function openLeaderboardModal() {
+            document.getElementById('leaderboard-modal').classList.remove('hidden');
+            await loadLeaderboardConfig();
+            updateLeaderboardCycleUI();
+            if (leaderboardConfig && leaderboardConfig.resetAt) {
+                currentLbFilter = 'cycle';
+            } else {
+                currentLbFilter = 'all';
+            }
+            setLeaderboardFilter(currentLbFilter);
+        }
+
+        async function refreshLeaderboardData() {
+            let icon = document.getElementById('btn-refresh-lb-icon');
+            if (icon) icon.classList.add('fa-spin');
+            await loadLeaderboardConfig();
+            updateLeaderboardCycleUI();
+            await fetchLeaderboard(true);
+            if (icon) setTimeout(() => icon.classList.remove('fa-spin'), 600);
+            showToast("Đã làm mới dữ liệu Bảng Vàng!");
+        }
+
+        async function fetchLeaderboard(forceRefresh = false) {
+            let list = document.getElementById('leaderboard-list');
+            let loading = document.getElementById('leaderboard-loading');
+            if (loading) loading.classList.remove('hidden');
+            
+            try {
+                if (forceRefresh || !state.allResultsData || state.allResultsData.length === 0) {
+                    let res = await fetch(GOOGLE_WEB_APP_URL + "?action=getResults&t=" + Date.now()); 
+                    state.allResultsData = JSON.parse(await res.text());
+                }
+                if (loading) loading.classList.add('hidden');
+                
+                // Update Code Filter Dropdown
+                let allCodes = [...new Set((state.allResultsData || []).map(r => String(r.code || '').trim().toUpperCase()).filter(Boolean))].sort();
+                let codeSelect = document.getElementById('leaderboard-code-filter');
+                let selectedCodeFilter = 'ALL';
+                if (codeSelect) {
+                    selectedCodeFilter = codeSelect.value || 'ALL';
+                    let opts = `<option value="ALL">🎯 Tất cả Mã Đề (${allCodes.length})</option>` + allCodes.map(c => `<option value="${c}" ${c === selectedCodeFilter ? 'selected' : ''}>📌 Mã Đề: ${c}</option>`).join('');
+                    if (codeSelect.innerHTML !== opts) codeSelect.innerHTML = opts;
+                    selectedCodeFilter = codeSelect.value || 'ALL';
+                }
+
+                let filteredData = state.allResultsData || [];
+
+                if (selectedCodeFilter && selectedCodeFilter !== 'ALL') {
+                    filteredData = filteredData.filter(r => String(r.code || '').trim().toUpperCase() === selectedCodeFilter);
+                }
+
+                let now = new Date();
+
+                if (currentLbFilter === 'cycle' && leaderboardConfig && leaderboardConfig.resetAt) {
+                    let resetDate = parseVietnameseDateTime(leaderboardConfig.resetAt);
+                    if (resetDate) {
+                        filteredData = filteredData.filter(r => {
+                            let d = parseVietnameseDateTime(r.date);
+                            return d && d >= resetDate;
+                        });
+                    }
+                } else if (currentLbFilter === 'week') {
+                    let weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+                    filteredData = filteredData.filter(r => {
+                        let d = parseVietnameseDateTime(r.date);
+                        return d && d >= weekAgo;
+                    });
+                } else if (currentLbFilter === 'month') {
+                    let monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+                    filteredData = filteredData.filter(r => {
+                        let d = parseVietnameseDateTime(r.date);
+                        return d && d >= monthAgo;
+                    });
+                }
+                
+                // Group by ID or Name+Class to only show best score per student
+                let grouped = {};
+                filteredData.forEach(r => {
+                    let sId = String(r.id || '').trim().toLowerCase();
+                    let nameStr = String(r.name || '').trim();
+                    let clsStr = String(r.cls || r.class || '').trim();
+                    if (!sId || sId === 'khách' || sId === 'guest') {
+                        if (nameStr && nameStr.toLowerCase() !== 'khách') {
+                            sId = clsStr ? `${clsStr.toLowerCase()}_${nameStr.toLowerCase()}` : nameStr.toLowerCase();
+                        } else {
+                            sId = `guest_${r.date || ''}_${r.code || ''}_${Math.random()}`;
+                        }
+                    }
+                    let currentScore = Number(r.score ?? r.maxScore ?? r.Score ?? r.TongDiem ?? 0);
+                    if (isNaN(currentScore)) currentScore = 0;
+                    if (!grouped[sId] || currentScore > grouped[sId].score) {
+                        grouped[sId] = { ...r, score: currentScore };
+                    }
+                });
+                
+                let uniqueData = Object.values(grouped);
+                if (uniqueData.length === 0) {
+                    let filterName = (currentLbFilter === 'cycle') ? 'đợt này' : (currentLbFilter === 'week' ? 'tuần này' : (currentLbFilter === 'month' ? 'tháng này' : 'toàn trường'));
+                    list.innerHTML = `
+                        <div class="text-center py-12 text-slate-500 font-bold">
+                            <i class="fa-solid fa-ghost text-5xl mb-3 opacity-30 block text-amber-500"></i>
+                            Chưa có dữ liệu xếp hạng ${filterName}
+                            <div class="text-xs text-slate-400 font-normal mt-1">Các bài thi nộp thành công sẽ tự động xuất hiện tại đây</div>
+                        </div>`;
+                    return;
+                }
+                
+                let sorted = uniqueData.sort((a,b) => b.score - a.score).slice(0, 10);
+                
+                list.innerHTML = sorted.map((hs, i) => {
+                    let rankStyle = '';
+                    let rankIcon = '';
+                    if (i === 0) {
+                        rankStyle = 'bg-gradient-to-r from-yellow-200 via-amber-200 to-amber-300 border-yellow-400 shadow-[0_0_15px_rgba(250,204,21,0.5)] transform scale-[1.02] z-10 relative';
+                        rankIcon = '<i class="fa-solid fa-crown text-yellow-600 text-2xl drop-shadow-md animate-bounce"></i>';
+                    } else if (i === 1) {
+                        rankStyle = 'bg-gradient-to-r from-slate-200 to-slate-300 border-slate-400 shadow-md';
+                        rankIcon = '<i class="fa-solid fa-medal text-slate-600 text-xl"></i>';
+                    } else if (i === 2) {
+                        rankStyle = 'bg-gradient-to-r from-orange-200 to-orange-300 border-orange-400 shadow-md';
+                        rankIcon = '<i class="fa-solid fa-medal text-orange-700 text-xl"></i>';
+                    } else {
+                        rankStyle = 'bg-white border-slate-200 hover:bg-amber-50/50';
+                        rankIcon = `<span class="font-black text-slate-400 text-base">${i+1}</span>`;
+                    }
+                    
+                    return `
+                    <div class="flex items-center p-3 md:p-4 rounded-2xl mb-3 border transition-all duration-300 hover:shadow-lg ${rankStyle}">
+                        <div class="w-10 flex justify-center items-center shrink-0">${rankIcon}</div>
+                        <div class="flex-grow pl-3 border-l border-black/10">
+                            <div class="font-bold text-slate-800 text-base md:text-lg uppercase flex items-center gap-2">
+                                ${hs.name !== 'Khách' && hs.name ? hs.name : 'ID ' + hs.id}
+                                ${i === 0 ? '<span class="bg-amber-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider">TOP 1</span>' : ''}
+                            </div>
+                            <div class="text-[11px] md:text-xs text-slate-500 font-medium mt-1 flex flex-wrap gap-1">
+                                <span class="bg-white/80 px-2 py-0.5 rounded-md border border-black/5 shadow-xs"><i class="fa-solid fa-graduation-cap text-slate-400 mr-1"></i>Lớp: <b>${hs.cls || hs.class || '-'}</b></span>
+                                <span class="bg-white/80 px-2 py-0.5 rounded-md border border-black/5 shadow-xs"><i class="fa-solid fa-hashtag text-slate-400 mr-1"></i>Mã đề: <b>${hs.code}</b></span>
+                                ${hs.date ? `<span class="bg-white/80 px-2 py-0.5 rounded-md border border-black/5 shadow-xs text-slate-400"><i class="fa-regular fa-clock mr-1"></i>${hs.date}</span>` : ''}
+                            </div>
+                        </div>
+                        <div class="text-right shrink-0 pl-2">
+                            <div class="font-black text-emerald-600 text-xl md:text-2xl drop-shadow-sm bg-white/80 px-3 py-1 rounded-xl border border-emerald-100 shadow-xs">${hs.score}</div>
+                            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mt-0.5">Điểm cao nhất</div>
+                        </div>
+                    </div>`;
+                }).join('');
+            } catch(e) {
+                if (loading) loading.classList.add('hidden');
+                list.innerHTML = '<div class="text-center py-6 text-red-500 font-bold"><i class="fa-solid fa-triangle-exclamation mr-2"></i>Lỗi tải dữ liệu Google Sheet</div>';
+            }
+        }
+
+        // ======================= RESET BẢNG VÀNG LOGIC =======================
+        let lbResetTimeMode = 'now';
+        function setLbResetTimeMode(mode) {
+            lbResetTimeMode = mode;
+            let btnNow = document.getElementById('btn-reset-time-now');
+            let btnCustom = document.getElementById('btn-reset-time-custom');
+            let contCustom = document.getElementById('lb-custom-time-container');
+            if (mode === 'now') {
+                btnNow.classList.add('bg-amber-500', 'text-white', 'shadow');
+                btnNow.classList.remove('bg-slate-100', 'text-slate-600');
+                btnCustom.classList.remove('bg-amber-500', 'text-white', 'shadow');
+                btnCustom.classList.add('bg-slate-100', 'text-slate-600');
+                contCustom.classList.add('hidden');
+            } else {
+                btnCustom.classList.add('bg-amber-500', 'text-white', 'shadow');
+                btnCustom.classList.remove('bg-slate-100', 'text-slate-600');
+                btnNow.classList.remove('bg-amber-500', 'text-white', 'shadow');
+                btnNow.classList.add('bg-slate-100', 'text-slate-600');
+                contCustom.classList.remove('hidden');
+
+                let now = new Date();
+                now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+                document.getElementById('lb-reset-custom-time').value = now.toISOString().slice(0, 16);
+            }
+        }
+
+        function openLeaderboardResetModal() {
+            let isDev = localStorage.getItem('devModeBypass') === 'true';
+            let isTeacher = (state.currentUser && (state.authorizedEmails.includes(state.currentUser.email) || state.currentUser.email === SUPER_ADMIN_EMAIL)) || isDev;
+
+            let pinCont = document.getElementById('lb-auth-pin-container');
+            if (pinCont) {
+                if (isTeacher) {
+                    pinCont.classList.add('hidden');
+                } else {
+                    pinCont.classList.remove('hidden');
+                    document.getElementById('lb-reset-auth-pin').value = '';
+                }
+            }
+
+            document.getElementById('lb-reset-cycle-title').value = leaderboardConfig.cycleTitle && leaderboardConfig.cycleTitle !== 'Toàn thời gian' ? leaderboardConfig.cycleTitle : '';
+            setLbResetTimeMode('now');
+            document.getElementById('leaderboard-reset-modal').classList.remove('hidden');
+        }
+
+        function closeLeaderboardResetModal() {
+            document.getElementById('leaderboard-reset-modal').classList.add('hidden');
+        }
+
+        async function confirmLeaderboardReset() {
+            let isDev = localStorage.getItem('devModeBypass') === 'true';
+            let isTeacher = (state.currentUser && (state.authorizedEmails.includes(state.currentUser.email) || state.currentUser.email === SUPER_ADMIN_EMAIL)) || isDev;
+
+            if (!isTeacher) {
+                let pin = document.getElementById('lb-reset-auth-pin')?.value.trim();
+                if (pin !== '123456' && pin !== 'tbs2025' && pin !== 'admin' && pin !== 'tbsmath') {
+                    return showToast("Mã xác thực Giáo viên không chính xác!", true);
+                }
+            }
+
+            let title = document.getElementById('lb-reset-cycle-title').value.trim() || `Đợt thi ${new Date().toLocaleDateString('vi-VN')}`;
+            let resetDate = new Date();
+
+            if (lbResetTimeMode === 'custom') {
+                let customVal = document.getElementById('lb-reset-custom-time').value;
+                if (customVal) resetDate = new Date(customVal);
+            }
+
+            let newConfig = {
+                resetAt: resetDate.toISOString(),
+                resetDateStr: resetDate.toLocaleDateString('vi-VN') + ' ' + resetDate.toLocaleTimeString('vi-VN'),
+                resetBy: state.currentUser ? state.currentUser.email : 'Giáo viên TBS',
+                cycleTitle: title,
+                updatedAt: new Date().toISOString()
+            };
+
+            let btn = document.getElementById('btn-confirm-lb-reset');
+            let oldText = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Đang thiết lập...';
+            btn.disabled = true;
+
+            try {
+                await db.collection("GameData").doc("LeaderboardConfig").set(newConfig);
+                leaderboardConfig = newConfig;
+                showToast("Đã tạo mới Bảng Vàng thành công!");
+                closeLeaderboardResetModal();
+                updateLeaderboardCycleUI();
+                setLeaderboardFilter('cycle');
+            } catch(e) {
+                showToast("Lỗi lưu cấu hình: " + e.message, true);
+            } finally {
+                btn.innerHTML = oldText;
+                btn.disabled = false;
+            }
+        }
+
+        async function clearLeaderboardReset() {
+            let isDev = localStorage.getItem('devModeBypass') === 'true';
+            let isTeacher = (state.currentUser && (state.authorizedEmails.includes(state.currentUser.email) || state.currentUser.email === SUPER_ADMIN_EMAIL)) || isDev;
+
+            if (!isTeacher) {
+                let pin = document.getElementById('lb-reset-auth-pin')?.value.trim();
+                if (pin !== '123456' && pin !== 'tbs2025' && pin !== 'admin' && pin !== 'tbsmath') {
+                    return showToast("Cần nhập mã xác thực để khôi phục!", true);
+                }
+            }
+
+            if (!confirm("Khôi phục Bảng Vàng để tính điểm cho toàn bộ lịch sử (bỏ mốc lọc tạo mới)?")) return;
+
+            try {
+                let emptyConfig = {
+                    resetAt: null,
+                    resetDateStr: null,
+                    resetBy: null,
+                    cycleTitle: "Toàn thời gian",
+                    updatedAt: new Date().toISOString()
+                };
+                await db.collection("GameData").doc("LeaderboardConfig").set(emptyConfig);
+                leaderboardConfig = emptyConfig;
+                showToast("Đã khôi phục tính điểm toàn thời gian!");
+                closeLeaderboardResetModal();
+                updateLeaderboardCycleUI();
+                setLeaderboardFilter('all');
+            } catch(e) {
+                showToast("Lỗi khôi phục: " + e.message, true);
+            }
+        }
+
+
+        // ======================= BẢNG TIN TBS NÂNG CAO =======================
+        let currentBoardEditorTab = 'visual';
+
+        async function renderBoard() {
+            let appContent = document.getElementById('app-content');
+            appContent.innerHTML = `<div class="mt-32 text-center text-main font-bold"><i class="fa-solid fa-spinner fa-spin text-5xl mb-4"></i><br>Đang tải bảng tin...</div>`;
+            try {
+                let doc = await db.collection("GameData").doc("BoardInfo").get();
+                let data = doc.exists ? doc.data() : {};
+                let content = data.content || `<p style="font-size: 16px; color: #475569;">Chưa có thông báo nào được đăng tải.</p>`;
+                let eventsStr = data.events || "Thi thử THPT Quốc gia (Toán)\nCập nhật Ngân hàng câu hỏi tháng 8\nKhảo sát chất lượng Lớp 12";
+                
+                // Process HTML or Markdown
+                let isHtml = /<(?:div|p|h[1-6]|span|table|ul|ol|hr|b|i|u|strong|em|font|section|article)[\s>]/i.test(content);
+                let processedContent = isHtml ? content : marked.parse(content.replace(/\n/g, '<br>'));
+                
+                let eventsArr = eventsStr.split('\n').filter(e => e.trim());
+                let colors = ['bg-emerald-500', 'bg-main', 'bg-rose-500', 'bg-amber-500', 'bg-violet-500'];
+                let eventsHtml = eventsArr.length ? eventsArr.map((e, i) => `<li class="flex items-center gap-3"><div class="w-2.5 h-2.5 rounded-full ${colors[i % colors.length]} shrink-0"></div><span class="text-sm font-semibold text-slate-700">${e.trim()}</span></li>`).join('') : '<li class="text-sm font-medium text-slate-500">Chưa có sự kiện nào.</li>';
+
+                let isDev = localStorage.getItem('devModeBypass') === 'true';
+                let isAdmin = (state.currentUser && (state.authorizedEmails.includes(state.currentUser.email) || state.currentUser.email === SUPER_ADMIN_EMAIL)) || isDev;
+                let editBtnHtml = isAdmin ? `<button onclick="openBoardEditor()" class="bg-gradient-to-r from-amber-500 to-orange-500 text-white px-4 py-2 rounded-xl font-black text-sm shadow-md hover:from-amber-600 hover:to-orange-600 hover:scale-105 transition-all ml-4 btn-3d flex items-center gap-2"><i class="fa-solid fa-pen-to-square"></i> Sửa Bảng Tin</button>` : '';
+
+                appContent.innerHTML = `
+                    <div class="w-full max-w-5xl fade-in mt-2 relative group">
+                        <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 border-b-2 border-slate-200 pb-4 gap-4 md:gap-0">
+                            <div class="flex items-center">
+                                <h2 class="text-2xl md:text-3xl font-black text-slate-800 uppercase tracking-widest"><i class="fa-solid fa-meteor text-orange-500 mr-3 animate-pulse"></i>BẢNG TIN TBS</h2>
+                                ${editBtnHtml}
+                            </div>
+                            <div class="bg-white border-2 border-slate-200 px-4 py-2 rounded-xl shadow-sm font-bold text-sm text-slate-500 flex items-center gap-2"><i class="fa-regular fa-calendar text-main"></i> Hôm nay: ${new Date().toLocaleDateString('vi-VN')}</div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div class="md:col-span-1 space-y-6">
+                                <div class="bg-gradient-to-br from-orange-500 to-amber-600 p-6 rounded-3xl shadow-lg relative overflow-hidden text-white">
+                                    <i class="fa-solid fa-bullhorn absolute -right-6 -bottom-6 text-white/10 text-8xl"></i>
+                                    <h3 class="text-xl font-black mb-2 relative z-10 uppercase tracking-widest">Tin Tức Đáng Chú Ý</h3>
+                                    <p class="text-white/80 font-medium text-sm relative z-10 mb-4">Các thông báo khẩn cấp và cập nhật quan trọng nhất trong tuần.</p>
+                                    <div class="bg-white/20 p-4 rounded-xl backdrop-blur-sm border border-white/30 text-sm font-bold shadow-inner relative z-10">
+                                        Vui lòng thường xuyên kiểm tra bảng tin để không bỏ lỡ các kỳ thi định kỳ!
+                                    </div>
+                                </div>
+                                <div class="bg-white p-6 rounded-3xl shadow-md border-2 border-slate-100">
+                                    <h3 class="text-lg font-black text-slate-700 mb-4 border-b-2 border-slate-100 pb-2 uppercase tracking-wide flex items-center justify-between">
+                                        <span><i class="fa-solid fa-calendar-days text-rose-500 mr-2"></i>Sự Kiện Sắp Tới</span>
+                                    </h3>
+                                    <ul class="space-y-3">
+                                        ${eventsHtml}
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div class="md:col-span-2">
+                                <div class="bg-white p-8 md:p-10 rounded-3xl shadow-lg border-2 border-slate-100 relative h-full flex flex-col">
+                                    <div class="absolute top-0 right-0 bg-gradient-to-r from-sky-500 to-mainDark text-white px-6 py-2 rounded-bl-3xl rounded-tr-3xl font-black text-sm uppercase tracking-widest shadow-md flex items-center gap-2"><i class="fa-solid fa-bell"></i> Tin Tuần / Tháng</div>
+                                    <div id="board-rendered-content" class="text-slate-700 font-normal leading-relaxed math-scroll min-h-[380px] flex-grow pt-4">
+                                        ${processedContent}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                if(window.MathJax) MathJax.typesetPromise();
+            } catch(e) {
+                appContent.innerHTML = "<div class='text-center text-red-400 py-10'><i class='fa-solid fa-triangle-exclamation text-5xl mb-3'></i><br>Lỗi kết nối khi tải bảng tin.</div>";
+            }
+        }
+
+        async function openBoardEditor() {
+            try {
+                let doc = await db.collection("GameData").doc("BoardInfo").get();
+                let data = doc.exists ? doc.data() : {};
+                let content = data.content || "";
+                let events = data.events || "Thi thử THPT Quốc gia (Toán)\nCập nhật Ngân hàng câu hỏi tháng 8\nKhảo sát chất lượng Lớp 12";
+                
+                let richEditor = document.getElementById('board-rich-editor');
+                let codeEditor = document.getElementById('board-edit-content');
+                let eventsInput = document.getElementById('board-edit-events');
+                
+                if (richEditor) richEditor.innerHTML = content;
+                if (codeEditor) codeEditor.value = content;
+                if (eventsInput) eventsInput.value = events;
+                
+                switchBoardEditorTab('visual');
+                
+                let modal = document.getElementById('board-edit-modal');
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            } catch(e) {
+                showToast("Lỗi tải nội dung bảng tin", true);
+            }
+        }
+
+        function closeBoardEditorModal() {
+            let modal = document.getElementById('board-edit-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function switchBoardEditorTab(tab) {
+            currentBoardEditorTab = tab;
+            let richEditor = document.getElementById('board-rich-editor');
+            let codeEditor = document.getElementById('board-edit-content');
+            let previewBox = document.getElementById('board-preview-container');
+            let toolbar = document.getElementById('board-toolbar-section');
+            
+            let btnVisual = document.getElementById('tab-btn-visual');
+            let btnPreview = document.getElementById('tab-btn-preview');
+            let btnCode = document.getElementById('tab-btn-code');
+            
+            // Reset tab button styles
+            [btnVisual, btnPreview, btnCode].forEach(b => {
+                if (b) {
+                    b.classList.remove('bg-white', 'text-main', 'shadow-sm');
+                    b.classList.add('text-slate-600');
+                }
+            });
+
+            if (tab === 'visual') {
+                if (btnVisual) { btnVisual.classList.add('bg-white', 'text-main', 'shadow-sm'); btnVisual.classList.remove('text-slate-600'); }
+                if (codeEditor && !codeEditor.classList.contains('hidden')) {
+                    richEditor.innerHTML = codeEditor.value;
+                }
+                if (richEditor) richEditor.classList.remove('hidden');
+                if (codeEditor) codeEditor.classList.add('hidden');
+                if (previewBox) previewBox.classList.add('hidden');
+                if (toolbar) toolbar.classList.remove('hidden');
+            } else if (tab === 'code') {
+                if (btnCode) { btnCode.classList.add('bg-white', 'text-main', 'shadow-sm'); btnCode.classList.remove('text-slate-600'); }
+                if (richEditor && !richEditor.classList.contains('hidden')) {
+                    codeEditor.value = richEditor.innerHTML;
+                }
+                if (richEditor) richEditor.classList.add('hidden');
+                if (codeEditor) codeEditor.classList.remove('hidden');
+                if (previewBox) previewBox.classList.add('hidden');
+                if (toolbar) toolbar.classList.add('hidden');
+            } else if (tab === 'preview') {
+                if (btnPreview) { btnPreview.classList.add('bg-white', 'text-main', 'shadow-sm'); btnPreview.classList.remove('text-slate-600'); }
+                let currentHtml = (codeEditor && !codeEditor.classList.contains('hidden')) ? codeEditor.value : richEditor.innerHTML;
+                if (previewBox) {
+                    previewBox.innerHTML = currentHtml || '<p class="text-slate-400 italic">Chưa có nội dung xem trước.</p>';
+                    previewBox.classList.remove('hidden');
+                    if (window.MathJax) MathJax.typesetPromise([previewBox]);
+                }
+                if (richEditor) richEditor.classList.add('hidden');
+                if (codeEditor) codeEditor.classList.add('hidden');
+                if (toolbar) toolbar.classList.add('hidden');
+            }
+        }
+
+        function formatDoc(cmd, value = null) {
+            let richEditor = document.getElementById('board-rich-editor');
+            richEditor.focus();
+            document.execCommand(cmd, false, value);
+        }
+
+        function changeHeading(tag) {
+            let richEditor = document.getElementById('board-rich-editor');
+            richEditor.focus();
+            if (tag === 'p') {
+                document.execCommand('formatBlock', false, '<p>');
+            } else {
+                document.execCommand('formatBlock', false, `<${tag}>`);
+            }
+        }
+
+        function changeFontSize(size) {
+            let richEditor = document.getElementById('board-rich-editor');
+            richEditor.focus();
+            
+            const sel = window.getSelection();
+            if (!sel || sel.rangeCount === 0 || sel.isCollapsed) {
+                // Wrap block or apply command
+                document.execCommand('fontSize', false, '7');
+            } else {
+                document.execCommand('fontSize', false, '7');
+            }
+            
+            // Convert font size=7 tags to inline style with exact pixel value
+            let fontEls = richEditor.querySelectorAll('font[size="7"]');
+            fontEls.forEach(f => {
+                f.removeAttribute('size');
+                f.style.fontSize = size;
+                f.style.lineHeight = '1.6';
+            });
+        }
+
+        function changeFontFamily(font) {
+            let richEditor = document.getElementById('board-rich-editor');
+            richEditor.focus();
+            document.execCommand('fontName', false, font);
+        }
+
+        function changeTextColor(color) {
+            let richEditor = document.getElementById('board-rich-editor');
+            richEditor.focus();
+            document.execCommand('foreColor', false, color);
+        }
+
+        function changeHighlight(color) {
+            let richEditor = document.getElementById('board-rich-editor');
+            richEditor.focus();
+            if (color === 'transparent') {
+                document.execCommand('removeFormat');
+            } else {
+                try {
+                    document.execCommand('hiliteColor', false, color);
+                } catch(e) {
+                    document.execCommand('backColor', false, color);
+                }
+            }
+        }
+
+        function clearFormatting() {
+            let richEditor = document.getElementById('board-rich-editor');
+            richEditor.focus();
+            document.execCommand('removeFormat', false, null);
+        }
+
+        function insertEmoji(char) {
+            let richEditor = document.getElementById('board-rich-editor');
+            richEditor.focus();
+            document.execCommand('insertText', false, char + ' ');
+        }
+
+        function insertBoardLink() {
+            let richEditor = document.getElementById('board-rich-editor');
+            richEditor.focus();
+            let url = prompt("Nhập đường dẫn trang web (URL):", "https://");
+            if (url && url !== "https://") {
+                let text = prompt("Nhập văn bản hiển thị cho liên kết (để trống nếu dùng chính URL):", "");
+                if (text) {
+                    let linkHtml = `<a href="${url}" target="_blank" style="color: #0284c7; text-decoration: underline; font-weight: bold;">${text}</a>`;
+                    document.execCommand('insertHTML', false, linkHtml);
+                } else {
+                    document.execCommand('createLink', false, url);
+                }
+            }
+        }
+
+        function insertBoardTable() {
+            let richEditor = document.getElementById('board-rich-editor');
+            richEditor.focus();
+            let tableHtml = `
+                <table style="width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 14px;">
+                    <thead>
+                        <tr style="background: #f1f5f9; color: #1e293b; font-weight: bold; border-bottom: 2px solid #cbd5e1;">
+                            <th style="padding: 8px 12px; border: 1px solid #cbd5e1; text-align: center;">STT</th>
+                            <th style="padding: 8px 12px; border: 1px solid #cbd5e1; text-align: left;">Nội Dung</th>
+                            <th style="padding: 8px 12px; border: 1px solid #cbd5e1; text-align: center;">Ghi Chú</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="padding: 8px 12px; border: 1px solid #cbd5e1; text-align: center;">1</td>
+                            <td style="padding: 8px 12px; border: 1px solid #cbd5e1;">Học phần 1</td>
+                            <td style="padding: 8px 12px; border: 1px solid #cbd5e1; text-align: center;">Đang mở</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px 12px; border: 1px solid #cbd5e1; text-align: center;">2</td>
+                            <td style="padding: 8px 12px; border: 1px solid #cbd5e1;">Học phần 2</td>
+                            <td style="padding: 8px 12px; border: 1px solid #cbd5e1; text-align: center;">Sắp mở</td>
+                        </tr>
+                    </tbody>
+                </table><p><br></p>
+            `;
+            document.execCommand('insertHTML', false, tableHtml);
+        }
+
+        function insertCallout(type) {
+            let richEditor = document.getElementById('board-rich-editor');
+            richEditor.focus();
+            let boxHtml = '';
+            if (type === 'info') {
+                boxHtml = `<div style="background-color: #f0f9ff; border-left: 4px solid #0ea5e9; padding: 12px 16px; border-radius: 10px; margin: 12px 0; color: #0369a1; font-weight: 500; font-size: 15px;"><strong style="font-weight: 800;">ℹ️ THÔNG BÁO:</strong> Nhập nội dung thông báo tại đây...</div><p><br></p>`;
+            } else if (type === 'alert') {
+                boxHtml = `<div style="background-color: #fef2f2; border-left: 4px solid #ef4444; padding: 12px 16px; border-radius: 10px; margin: 12px 0; color: #b91c1c; font-weight: 500; font-size: 15px;"><strong style="font-weight: 800;">⚠️ LƯU Ý QUAN TRỌNG:</strong> Nhập nội dung cảnh báo / hạn chót...</div><p><br></p>`;
+            } else if (type === 'success') {
+                boxHtml = `<div style="background-color: #f0fdf4; border-left: 4px solid #10b981; padding: 12px 16px; border-radius: 10px; margin: 12px 0; color: #15803d; font-weight: 500; font-size: 15px;"><strong style="font-weight: 800;">✅ CHÚC MỪNG:</strong> Tuyên dương thành tích xuất sắc...</div><p><br></p>`;
+            } else if (type === 'highlight') {
+                boxHtml = `<div style="background-color: #fffbeb; border-left: 4px solid #f59e0b; padding: 12px 16px; border-radius: 10px; margin: 12px 0; color: #b45309; font-weight: 500; font-size: 15px;"><strong style="font-weight: 800;">🔥 TIÊU ĐIỂM:</strong> Điểm nhấn quan trọng trong tuần...</div><p><br></p>`;
+            }
+            document.execCommand('insertHTML', false, boxHtml);
+        }
+
+        function insertBoardTemplate(type) {
+            let richEditor = document.getElementById('board-rich-editor');
+            richEditor.focus();
+            let templateHtml = '';
+            
+            if (type === 'codes') {
+                templateHtml = `
+<h2 style="color: #0284c7; text-align: center; font-size: 22px; font-weight: 900; margin-bottom: 8px;">📢 DANH SÁCH MÃ ĐỀ LUYỆN TẬP TUẦN NÀY</h2>
+<p style="text-align: center; color: #64748b; font-size: 14px; margin-bottom: 16px;"><em>Học sinh nhập mã đề tương ứng tại trang chủ để bắt đầu làm bài</em></p>
+<div style="background: #f8fafc; border: 2px dashed #cbd5e1; border-radius: 12px; padding: 16px; margin-bottom: 16px;">
+    <p style="color: #1e293b; font-size: 15px; line-height: 2;">
+        🔥 <strong style="color: #0284c7;">SOCOBN</strong>: ĐƠN ĐIỆU VÀ CỰC TRỊ<br>
+        🔥 <strong style="color: #0284c7;">FGMZ82</strong>: GIÁ TRỊ LỚN NHẤT & NHỎ NHẤT (GTLN, GTNN)<br>
+        🔥 <strong style="color: #0284c7;">WTGUKF</strong>: ĐƯỜNG TIỆM CẬN ĐỒ THỊ<br>
+        🔥 <strong style="color: #0284c7;">M8QNMY</strong>: KHẢO SÁT HÀM SỐ VÀ VẼ ĐỒ THỊ<br>
+        🔥 <strong style="color: #0284c7;">K3B5AG</strong>: VÉC TƠ TRONG KHÔNG GIAN (HÌNH HỌC 12)<br>
+        🔥 <strong style="color: #0284c7;">WTYPHK</strong>: ĐỀ ÔN TẬP TỔNG HỢP LỚP 11B2
+    </p>
+</div>
+<p style="color: #dc2626; font-weight: bold; font-size: 15px; text-align: center;">👨‍🏫 Thầy Hùng - SĐT / Zalo: 0919.022.202</p>
+                `;
+            } else if (type === 'exam') {
+                templateHtml = `
+<h2 style="color: #dc2626; text-align: center; font-size: 22px; font-weight: 900; margin-bottom: 8px;">🏆 THÔNG BÁO LỊCH THI & KIỂM TRA ĐỊNH KỲ</h2>
+<p style="text-align: center; color: #64748b; font-size: 14px; margin-bottom: 14px;"><em>Áp dụng cho học sinh toàn trường từ ngày 15/08</em></p>
+<div style="background-color: #fff7ed; border-left: 4px solid #ea580c; padding: 14px 18px; border-radius: 10px; margin-bottom: 16px; color: #9a3412;">
+    <p style="font-weight: bold; font-size: 16px; margin-bottom: 6px;">⏰ Thời gian mở phòng thi trực tuyến:</p>
+    <ul style="list-style-type: disc; padding-left: 20px; font-size: 15px; line-height: 1.8;">
+        <li><strong>Khối 12:</strong> Bắt đầu từ 19h30 - 21h00 Thứ Bảy hàng tuần.</li>
+        <li><strong>Khối 11:</strong> Bắt đầu từ 20h00 - 21h30 Chủ Nhật hàng tuần.</li>
+        <li><strong>Khối 10:</strong> Mở hệ thống luyện tập tự do cả tuần.</li>
+    </ul>
+</div>
+<div style="background-color: #fef2f2; border: 1px solid #fecaca; padding: 10px 14px; border-radius: 8px; font-size: 14px; color: #991b1b;">
+    <strong>⚠️ Lưu ý:</strong> Mỗi học sinh được làm bài tối đa 3 lần. Hệ thống tự động ghi nhận điểm cao nhất lên <strong>Bảng Vàng TBS</strong>.
+</div>
+                `;
+            } else if (type === 'opening') {
+                templateHtml = `
+<h2 style="color: #16a34a; text-align: center; font-size: 22px; font-weight: 900; margin-bottom: 8px;">🚀 THÔNG BÁO KHAI GIẢNG LỚP HỌC MỚI</h2>
+<div style="background: #f0fdf4; border: 2px solid #bbf7d0; border-radius: 12px; padding: 16px; margin-bottom: 14px;">
+    <p style="font-size: 15px; color: #166534; line-height: 1.9;">
+        📍 <strong>Địa điểm:</strong> Trung tâm KIÊN LONG - 217 Nguyễn Hồng Đào, P.14, Q.Tân Bình<br>
+        📅 <strong>Lịch học:</strong> Thứ 7 & Chủ Nhật hàng tuần<br>
+        🎯 <strong>Mục tiêu:</strong> Ôn tập trọng tâm, rèn kỹ năng giải nhanh đề thi Tốt nghiệp THPT & ĐGNL.
+    </p>
+</div>
+<p style="color: #0284c7; font-weight: bold; text-align: center; font-size: 15px;">Quý phụ huynh & Học sinh vui lòng liên hệ Thầy Hùng để đăng ký xếp lớp!</p>
+                `;
+            }
+
+            if (confirm("Chèn mẫu nội dung này vào Bảng tin? (Bạn có thể tiếp tục chỉnh sửa sau khi chèn)")) {
+                richEditor.innerHTML = templateHtml;
+            }
+        }
+
+        async function saveBoardContent() {
+            let richEditor = document.getElementById('board-rich-editor');
+            let codeEditor = document.getElementById('board-edit-content');
+            let eventsInput = document.getElementById('board-edit-events');
+            
+            // Get content from active view
+            let content = (currentBoardEditorTab === 'code' && codeEditor) ? codeEditor.value : (richEditor ? richEditor.innerHTML : '');
+            let events = eventsInput ? eventsInput.value : '';
+            
+            try {
+                await db.collection("GameData").doc("BoardInfo").set({ 
+                    content: content, 
+                    events: events,
+                    updatedAt: new Date().toISOString()
+                });
+                closeBoardEditorModal();
+                showToast("Đã lưu bảng tin thành công!");
+                renderBoard(); // Reload the board
+            } catch(e) {
+                showToast("Lỗi khi lưu bảng tin: " + e.message, true);
+            }
+        }
+
+        // ======================= LIÊN KẾT & HƯỚNG DẪN =======================
+        function renderLinks() {
+            let isDev = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && localStorage.getItem('devModeBypass') === 'true';
+            let isTeacher = (state.currentUser && (state.authorizedEmails.includes(state.currentUser.email) || state.currentUser.email === SUPER_ADMIN_EMAIL)) || isDev;
+
+            let linksHtml = savedLinks.length ? savedLinks.map((l, index) => {
+                let iconClass = l.icon || 'fa-solid fa-link';
+                return `
+                    <div class="relative group">
+                        <a href="${l.url}" target="_blank" rel="noopener noreferrer" class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex items-center gap-4 hover:border-main hover:shadow-md transition-all h-full">
+                            <div class="w-12 h-12 bg-sky-100 text-sky-600 rounded-xl flex items-center justify-center text-xl group-hover:scale-110 transition shrink-0 shadow-2xs">
+                                <i class="${iconClass}"></i>
+                            </div>
+                            <div class="truncate flex-grow">
+                                <h4 class="font-bold text-slate-800 group-hover:text-main leading-tight mb-1 truncate">${l.title}</h4>
+                                <p class="text-xs text-slate-400 truncate">${l.url}</p>
+                            </div>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-xs text-slate-300 group-hover:text-sky-500 transition shrink-0"></i>
+                        </a>
+                        ${isTeacher ? `
+                            <button onclick="openLinksEditorModal(${index})" class="opacity-0 group-hover:opacity-100 absolute top-2 right-2 w-7 h-7 bg-amber-500 hover:bg-amber-600 text-white rounded-lg text-xs shadow-md transition flex items-center justify-center btn-3d" title="Sửa liên kết này">
+                                <i class="fa-solid fa-pen"></i>
+                            </button>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('') : '<div class="col-span-full text-center py-12 text-slate-400 font-medium bg-white/50 rounded-2xl border border-dashed border-slate-200"><i class="fa-solid fa-link-slash text-4xl mb-3 text-slate-300"></i><br>Chưa có liên kết nào. Bấm nút <b>Cập Nhật Liên Kết</b> để thêm.</div>';
+
+            let actionBtn = isTeacher ? `
+                <button onclick="openLinksEditorModal()" class="bg-gradient-to-r from-sky-500 to-mainDark text-white px-5 py-2.5 rounded-xl font-black text-sm shadow-md hover:from-sky-600 hover:to-mainDark hover:scale-105 transition-all btn-3d flex items-center gap-2">
+                    <i class="fa-solid fa-pen-to-square"></i> Cập Nhật Liên Kết
+                </button>
+            ` : `
+                <button onclick="openLinksEditorModal()" class="bg-white hover:bg-sky-50 text-slate-600 hover:text-sky-700 px-4 py-2 rounded-xl font-bold text-xs shadow-sm transition-all flex items-center gap-2 border border-slate-200 hover:border-sky-300">
+                    <i class="fa-solid fa-lock text-amber-500"></i> Quản Lý Liên Kết
+                </button>
+            `;
+
+            document.getElementById('app-content').innerHTML = `
+                <div class="glass-panel p-6 md:p-10 rounded-3xl w-full max-w-5xl text-center fade-in border-t-4 border-sky-500">
+                    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8 border-b-2 border-slate-100 pb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-12 h-12 rounded-2xl bg-sky-100 text-sky-600 flex items-center justify-center text-2xl shadow-sm">
+                                <i class="fa-solid fa-link"></i>
+                            </div>
+                            <div class="text-left">
+                                <h2 class="text-2xl md:text-3xl font-black text-sky-900 uppercase tracking-wider leading-tight">Danh Bạ Liên Kết</h2>
+                                <p class="text-xs text-slate-500 font-medium">Truy cập nhanh các công cụ và tiện ích học tập trực tuyến</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            ${actionBtn}
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-left">
+                        ${linksHtml}
+                    </div>
+                </div>
+            `;
+        }
+
+        function openLinksEditorModal(targetIndex = -1) {
+            let isDev = localStorage.getItem('devModeBypass') === 'true';
+            let isTeacher = (state.currentUser && (state.authorizedEmails.includes(state.currentUser.email) || state.currentUser.email === SUPER_ADMIN_EMAIL)) || isDev;
+
+            let pinCont = document.getElementById('links-auth-pin-container');
+            if (pinCont) {
+                if (isTeacher) {
+                    pinCont.classList.add('hidden');
+                } else {
+                    pinCont.classList.remove('hidden');
+                    let pinInput = document.getElementById('links-reset-auth-pin');
+                    if (pinInput) pinInput.value = '';
+                }
+            }
+
+            cancelEditLinkItem();
+            renderLinksEditorList();
+
+            if (targetIndex >= 0 && targetIndex < savedLinks.length) {
+                editLinkItem(targetIndex);
+            }
+
+            let modal = document.getElementById('links-edit-modal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
+        }
+
+        function closeLinksEditorModal() {
+            let modal = document.getElementById('links-edit-modal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+            cancelEditLinkItem();
+        }
+
+        function updateLinkIconPreview(iconClass) {
+            let prev = document.getElementById('link-icon-preview');
+            if (prev) {
+                prev.innerHTML = `<i class="${iconClass}"></i>`;
+            }
+        }
+
+        function submitLinkItem() {
+            let title = document.getElementById('link-input-title')?.value.trim();
+            let url = document.getElementById('link-input-url')?.value.trim();
+            let icon = document.getElementById('link-input-icon')?.value || 'fa-solid fa-link';
+            let editIdx = parseInt(document.getElementById('link-edit-index')?.value || '-1', 10);
+
+            if (!title) {
+                return showToast("Vui lòng nhập Tên liên kết / Tiêu đề!", true);
+            }
+            if (!url) {
+                return showToast("Vui lòng nhập Đường dẫn URL!", true);
+            }
+
+            // Auto prepend https:// if missing protocol
+            if (!/^https?:\/\//i.test(url)) {
+                url = 'https://' + url;
+            }
+
+            let item = { title, url, icon };
+
+            if (editIdx >= 0 && editIdx < savedLinks.length) {
+                savedLinks[editIdx] = item;
+                showToast(`Đã sửa liên kết "${title}"!`);
+            } else {
+                savedLinks.push(item);
+                showToast(`Đã thêm liên kết "${title}" vào danh sách!`);
+            }
+
+            cancelEditLinkItem();
+            renderLinksEditorList();
+        }
+
+        function editLinkItem(index) {
+            if (index < 0 || index >= savedLinks.length) return;
+            let item = savedLinks[index];
+
+            document.getElementById('link-edit-index').value = index;
+            document.getElementById('link-input-title').value = item.title || '';
+            document.getElementById('link-input-url').value = item.url || '';
+            
+            let iconSelect = document.getElementById('link-input-icon');
+            if (iconSelect) {
+                iconSelect.value = item.icon || 'fa-solid fa-link';
+                updateLinkIconPreview(iconSelect.value);
+            }
+
+            let formHeading = document.getElementById('link-form-title-text');
+            if (formHeading) formHeading.innerText = `Chỉnh Sửa Liên Kết #${index + 1}`;
+
+            let headingIcon = document.getElementById('link-form-heading-icon');
+            if (headingIcon) {
+                headingIcon.className = 'fa-solid fa-pen-to-square text-amber-500';
+            }
+
+            let submitBtnText = document.getElementById('btn-submit-link-text');
+            if (submitBtnText) submitBtnText.innerText = 'Cập Nhật Mục Này';
+
+            let submitBtnIcon = document.getElementById('btn-submit-link-icon');
+            if (submitBtnIcon) submitBtnIcon.className = 'fa-solid fa-check';
+
+            let cancelBtn = document.getElementById('btn-cancel-link-edit');
+            if (cancelBtn) cancelBtn.classList.remove('hidden');
+
+            document.getElementById('link-input-title')?.focus();
+        }
+
+        function cancelEditLinkItem() {
+            let editIdx = document.getElementById('link-edit-index');
+            if (editIdx) editIdx.value = '-1';
+
+            let titleInput = document.getElementById('link-input-title');
+            if (titleInput) titleInput.value = '';
+
+            let urlInput = document.getElementById('link-input-url');
+            if (urlInput) urlInput.value = '';
+
+            let iconSelect = document.getElementById('link-input-icon');
+            if (iconSelect) {
+                iconSelect.value = 'fa-solid fa-link';
+                updateLinkIconPreview('fa-solid fa-link');
+            }
+
+            let formHeading = document.getElementById('link-form-title-text');
+            if (formHeading) formHeading.innerText = 'Thêm Liên Kết Mới';
+
+            let headingIcon = document.getElementById('link-form-heading-icon');
+            if (headingIcon) {
+                headingIcon.className = 'fa-solid fa-circle-plus text-sky-500';
+            }
+
+            let submitBtnText = document.getElementById('btn-submit-link-text');
+            if (submitBtnText) submitBtnText.innerText = 'Thêm Vào Danh Sách';
+
+            let submitBtnIcon = document.getElementById('btn-submit-link-icon');
+            if (submitBtnIcon) submitBtnIcon.className = 'fa-solid fa-plus';
+
+            let cancelBtn = document.getElementById('btn-cancel-link-edit');
+            if (cancelBtn) cancelBtn.classList.add('hidden');
+        }
+
+        function deleteLinkItem(index) {
+            if (index < 0 || index >= savedLinks.length) return;
+            let item = savedLinks[index];
+            if (confirm(`Bạn có chắc muốn xóa liên kết "${item.title}" khỏi danh sách?`)) {
+                savedLinks.splice(index, 1);
+                if (parseInt(document.getElementById('link-edit-index')?.value || '-1', 10) === index) {
+                    cancelEditLinkItem();
+                }
+                renderLinksEditorList();
+                showToast(`Đã xóa liên kết "${item.title}"`);
+            }
+        }
+
+        function moveLinkItem(index, direction) {
+            if (direction === 'up' && index > 0) {
+                let temp = savedLinks[index];
+                savedLinks[index] = savedLinks[index - 1];
+                savedLinks[index - 1] = temp;
+            } else if (direction === 'down' && index < savedLinks.length - 1) {
+                let temp = savedLinks[index];
+                savedLinks[index] = savedLinks[index + 1];
+                savedLinks[index + 1] = temp;
+            }
+            renderLinksEditorList();
+        }
+
+        function resetDefaultLinks() {
+            if (confirm("Khôi phục danh sách về 9 liên kết mặc định của hệ thống? Các mục chưa lưu sẽ được thay thế.")) {
+                savedLinks = JSON.parse(JSON.stringify(DEFAULT_GLOBAL_LINKS));
+                cancelEditLinkItem();
+                renderLinksEditorList();
+                showToast("Đã nạp 9 liên kết mặc định. Nhấn 'LƯU & ĐỒNG BỘ' để hoàn tất!");
+            }
+        }
+
+        function renderLinksEditorList() {
+            let container = document.getElementById('links-editor-list');
+            let countBadge = document.getElementById('links-count-badge');
+            if (countBadge) countBadge.innerText = savedLinks.length;
+
+            if (!container) return;
+
+            if (!savedLinks || savedLinks.length === 0) {
+                container.innerHTML = `<div class="p-8 text-center text-slate-400 font-medium text-sm">Chưa có liên kết nào. Hãy thêm liên kết đầu tiên ở form phía trên hoặc khôi phục mẫu.</div>`;
+                return;
+            }
+
+            container.innerHTML = savedLinks.map((l, i) => {
+                let iconClass = l.icon || 'fa-solid fa-link';
+                return `
+                    <div class="p-3 hover:bg-slate-50 flex items-center justify-between gap-3 transition">
+                        <div class="flex items-center gap-3 min-w-0 flex-grow">
+                            <span class="w-6 text-center text-xs font-black text-slate-400 shrink-0">${i + 1}</span>
+                            <div class="w-9 h-9 rounded-lg bg-sky-100 text-sky-600 flex items-center justify-center text-base shrink-0">
+                                <i class="${iconClass}"></i>
+                            </div>
+                            <div class="min-w-0 flex-grow">
+                                <div class="font-bold text-slate-800 text-sm truncate">${l.title}</div>
+                                <a href="${l.url}" target="_blank" class="text-xs text-sky-600 hover:underline truncate block">${l.url}</a>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-1 shrink-0">
+                            <button type="button" onclick="moveLinkItem(${i}, 'up')" ${i === 0 ? 'disabled class="w-7 h-7 rounded-lg bg-slate-100 text-slate-300 text-xs flex items-center justify-center cursor-not-allowed"' : 'class="w-7 h-7 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs flex items-center justify-center transition"'} title="Chuyển lên"><i class="fa-solid fa-arrow-up"></i></button>
+                            <button type="button" onclick="moveLinkItem(${i}, 'down')" ${i === savedLinks.length - 1 ? 'disabled class="w-7 h-7 rounded-lg bg-slate-100 text-slate-300 text-xs flex items-center justify-center cursor-not-allowed"' : 'class="w-7 h-7 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs flex items-center justify-center transition"'} title="Chuyển xuống"><i class="fa-solid fa-arrow-down"></i></button>
+                            <button type="button" onclick="editLinkItem(${i})" class="w-7 h-7 rounded-lg bg-amber-100 hover:bg-amber-200 text-amber-700 text-xs flex items-center justify-center transition" title="Sửa"><i class="fa-solid fa-pen"></i></button>
+                            <button type="button" onclick="deleteLinkItem(${i})" class="w-7 h-7 rounded-lg bg-rose-100 hover:bg-rose-200 text-rose-600 text-xs flex items-center justify-center transition" title="Xóa"><i class="fa-solid fa-trash-can"></i></button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function saveAllGlobalLinks() {
+            let isDev = localStorage.getItem('devModeBypass') === 'true';
+            let isTeacher = (state.currentUser && (state.authorizedEmails.includes(state.currentUser.email) || state.currentUser.email === SUPER_ADMIN_EMAIL)) || isDev;
+
+            if (!isTeacher) {
+                let pin = document.getElementById('links-reset-auth-pin')?.value.trim();
+                if (pin !== '123456' && pin !== 'tbs2025' && pin !== 'admin' && pin !== 'tbsmath') {
+                    return showToast("Mã xác thực Giáo viên không chính xác!", true);
+                }
+            }
+
+            let btn = document.getElementById('btn-save-global-links');
+            let oldHtml = btn ? btn.innerHTML : '';
+            if (btn) {
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Đang lưu...';
+                btn.disabled = true;
+            }
+
+            try {
+                await db.collection("GameData").doc("GlobalLinks").set({
+                    list: savedLinks,
+                    updatedAt: new Date().toISOString(),
+                    updatedBy: state.currentUser ? state.currentUser.email : 'Giáo viên TBS'
+                });
+                localStorage.setItem('tbs_links', JSON.stringify(savedLinks));
+                showToast("Đã lưu và đồng bộ danh bạ liên kết thành công!");
+                closeLinksEditorModal();
+                renderLinks();
+            } catch(e) {
+                showToast("Lỗi lưu liên kết: " + e.message, true);
+            } finally {
+                if (btn) {
+                    btn.innerHTML = oldHtml;
+                    btn.disabled = false;
+                }
+            }
+        }
+
+        function renderGuide() {
+            document.getElementById('app-content').innerHTML = `
+                <div class="glass-panel p-6 md:p-8 rounded-3xl w-full max-w-6xl text-left fade-in border-t-4 border-emerald-500 flex flex-col md:flex-row gap-6">
+                    <div class="w-full md:w-1/3 flex flex-col gap-3">
+                        <h2 class="text-2xl font-black text-slate-800 mb-2 uppercase tracking-widest border-b-2 border-slate-200 pb-3"><i class="fa-solid fa-book-open text-emerald-500 mr-3"></i>Hướng Dẫn</h2>
+                        <button onclick="showGuideTab('student')" id="guide-tab-student" class="guide-tab active-guide-tab px-5 py-4 rounded-2xl font-bold text-left transition flex items-center justify-between"><span class="flex items-center gap-3"><i class="fa-solid fa-graduation-cap text-xl"></i> Dành cho Học sinh</span><i class="fa-solid fa-chevron-right"></i></button>
+                        <button onclick="showGuideTab('teacher')" id="guide-tab-teacher" class="guide-tab px-5 py-4 rounded-2xl font-bold text-left transition flex items-center justify-between"><span class="flex items-center gap-3"><i class="fa-solid fa-chalkboard-user text-xl"></i> Dành cho Giáo viên</span><i class="fa-solid fa-chevron-right"></i></button>
+                        <button onclick="showGuideTab('admin')" id="guide-tab-admin" class="guide-tab px-5 py-4 rounded-2xl font-bold text-left transition flex items-center justify-between"><span class="flex items-center gap-3"><i class="fa-solid fa-user-shield text-xl"></i> Quản trị viên</span><i class="fa-solid fa-chevron-right"></i></button>
+                    </div>
+                    <div class="w-full md:w-2/3 bg-white/60 p-6 md:p-8 rounded-3xl border border-slate-200 shadow-inner h-[600px] overflow-y-auto admin-scroll" id="guide-content-area">
+                    </div>
+                </div>
+            `;
+            showGuideTab('student');
+        }
+
+        window.showGuideTab = function(tab) {
+            document.querySelectorAll('.guide-tab').forEach(el => {
+                el.classList.remove('bg-emerald-500', 'text-white', 'shadow-md');
+                el.classList.add('bg-slate-50', 'text-slate-600', 'hover:bg-slate-100');
+            });
+            let active = document.getElementById('guide-tab-' + tab);
+            active.classList.remove('bg-slate-50', 'text-slate-600', 'hover:bg-slate-100');
+            active.classList.add('bg-emerald-500', 'text-white', 'shadow-md');
+
+            let content = '';
+            if (tab === 'student') {
+                content = `
+                    <h3 class="text-2xl font-black text-emerald-700 mb-6">Hướng dẫn dành cho Học sinh</h3>
+                    
+                    <div class="space-y-6">
+                        <div class="bg-white p-5 rounded-2xl shadow-sm border-l-4 border-emerald-400">
+                            <h4 class="font-bold text-lg text-slate-800 mb-2"><i class="fa-solid fa-right-to-bracket text-emerald-500 mr-2"></i>1. Đăng nhập và Bắt đầu thi</h4>
+                            <p class="text-slate-600 mb-2">Để bắt đầu làm bài, bạn cần có <b>Mã Đề Thi</b> do giáo viên cung cấp. Nhập mã này tại trang chủ và nhấn <b>VÀO THI NGAY</b>.</p>
+                            <p class="text-slate-600">Tiếp theo, nhập <b>Mã ID Học sinh</b> và <b>Mật khẩu</b> cá nhân. Nếu là lần đầu tiên đăng nhập với mật khẩu mặc định (123456), hệ thống sẽ yêu cầu bạn đổi mật khẩu mới để bảo mật bài thi.</p>
+                        </div>
+                        
+                        <div class="bg-white p-5 rounded-2xl shadow-sm border-l-4 border-amber-400">
+                            <h4 class="font-bold text-lg text-slate-800 mb-2"><i class="fa-solid fa-shield-halved text-amber-500 mr-2"></i>2. Quy chế thi (Anti-cheat)</h4>
+                            <p class="text-slate-600">Trong chế độ <b>Thi nghiêm túc</b>, hệ thống sẽ theo dõi các hành vi chuyển tab, thu nhỏ trình duyệt, hoặc mở ứng dụng khác. Nếu bạn vi phạm quá 3 lần, bài thi sẽ tự động bị nộp.</p>
+                        </div>
+                        
+                        <div class="bg-white p-5 rounded-2xl shadow-sm border-l-4 border-sky-400">
+                            <h4 class="font-bold text-lg text-slate-800 mb-2"><i class="fa-solid fa-keyboard text-sky-500 mr-2"></i>3. Gõ công thức Toán học</h4>
+                            <p class="text-slate-600 mb-2">Đối với các câu hỏi Điền khuyết (Phần 3), bạn có thể sử dụng bàn phím Toán học tích hợp để nhập phân số, căn bậc hai, luỹ thừa,... một cách dễ dàng.</p>
+                            <p class="text-slate-600">Bạn cũng có thể mở bảng nháp (Bảng trắng) tại biểu tượng góc trên bên phải để vẽ hình hoặc tính toán nháp.</p>
+                        </div>
+                    </div>
+                `;
+            } else if (tab === 'teacher') {
+                content = `
+                    <h3 class="text-2xl font-black text-indigo-700 mb-6">Hướng dẫn dành cho Giáo viên</h3>
+                    
+                    <div class="space-y-6">
+                        <div class="bg-white p-5 rounded-2xl shadow-sm border-l-4 border-indigo-400">
+                            <h4 class="font-bold text-lg text-slate-800 mb-2"><i class="fa-solid fa-wand-magic-sparkles text-indigo-500 mr-2"></i>1. Sinh đề tự động bằng AI</h4>
+                            <p class="text-slate-600">Tại trang Quản trị, giáo viên có thể dán nội dung văn bản đề thi thô hoặc ảnh chụp đề thi. AI (Gemini) sẽ tự động nhận diện, bóc tách và định dạng lại thành cấu trúc JSON chuẩn của hệ thống cho cả 3 phần thi.</p>
+                        </div>
+
+                        <div class="bg-white p-5 rounded-2xl shadow-sm border-l-4 border-teal-400">
+                            <h4 class="font-bold text-lg text-slate-800 mb-2"><i class="fa-solid fa-cubes text-teal-500 mr-2"></i>2. Trộn đề từ Ngân hàng (Ma trận)</h4>
+                            <p class="text-slate-600 mb-2">Tính năng <b>Ngân Hàng/Ma Trận</b> cho phép giáo viên thiết lập cấu trúc đề thi (ví dụ: 5 câu Nhận biết Khảo sát hàm số, 3 câu Thông hiểu Hình Oxyz). Hệ thống sẽ tự động bốc ngẫu nhiên các câu hỏi thỏa mãn từ Ngân hàng để tạo thành đề thi mới.</p>
+                        </div>
+                        
+                        <div class="bg-white p-5 rounded-2xl shadow-sm border-l-4 border-orange-400">
+                            <h4 class="font-bold text-lg text-slate-800 mb-2"><i class="fa-solid fa-chart-simple text-orange-500 mr-2"></i>3. Tra cứu và Trích xuất điểm</h4>
+                            <p class="text-slate-600">Tại tab <b>Quản Lý Điểm</b>, giáo viên có thể xem chi tiết điểm số của học sinh theo từng phần thi. Hỗ trợ lọc theo Lớp, Khối và cho phép xuất (Export CSV) báo cáo ra định dạng file Excel để thống kê.</p>
+                        </div>
+                    </div>
+                `;
+            } else if (tab === 'admin') {
+                content = `
+                    <h3 class="text-2xl font-black text-rose-700 mb-6">Khu vực Quản trị (Super Admin)</h3>
+                    
+                    <div class="space-y-6">
+                        <div class="bg-white p-5 rounded-2xl shadow-sm border-l-4 border-rose-400">
+                            <h4 class="font-bold text-lg text-slate-800 mb-2"><i class="fa-solid fa-user-shield text-rose-500 mr-2"></i>1. Phân quyền Giáo viên</h4>
+                            <p class="text-slate-600">Super Admin (người có quyền cao nhất) có thể cấp quyền truy cập hệ thống Quản trị cho các giáo viên khác thông qua tính năng <b>Phân Quyền</b>. Chỉ những email được cấp quyền mới có thể xem và sửa đề thi.</p>
+                        </div>
+
+                        <div class="bg-white p-5 rounded-2xl shadow-sm border-l-4 border-violet-400">
+                            <h4 class="font-bold text-lg text-slate-800 mb-2"><i class="fa-solid fa-users text-violet-500 mr-2"></i>2. Quản lý Học sinh</h4>
+                            <p class="text-slate-600">Tại tab <b>Học Sinh</b>, quản trị viên có thể quản lý danh sách thí sinh dự thi. Tính năng <b>Import Nhanh</b> cho phép sao chép dữ liệu từ Excel (ID, Họ Tên, Lớp) và dán trực tiếp để tạo hàng loạt tài khoản. Mật khẩu khởi tạo sẽ mặc định là 123456.</p>
+                        </div>
+                    </div>
+                `;
+            }
+            document.getElementById('guide-content-area').innerHTML = `<div class="fade-in">${content}</div>`;
+        }
+    </script>
+</body>
+</html>
