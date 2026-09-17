@@ -427,12 +427,12 @@
                             <i class="fa-solid fa-heading text-sky-600"></i> Khung Tiêu Đề Hành Chính
                         </h4>
                         <div>
-                            <label class="text-[10px] font-bold text-slate-500 uppercase">Tên đơn vị / Trường (Dòng 1)</label>
-                            <input type="text" id="cv7991-school1" value="Trường THCS-THPT Nguyễn Khuyến" oninput="updateCV7991Preview()" class="w-full p-2 border rounded-lg text-xs font-semibold outline-none focus:border-purple-500">
+                            <label class="text-[10px] font-bold text-slate-500 uppercase">Sở / Trường (Dòng 1)</label>
+                            <input type="text" id="cv7991-school1" value="SỞ GIÁO DỤC VÀ ĐÀO TẠO TP. HỒ CHÍ MINH" oninput="updateCV7991Preview()" class="w-full p-2 border rounded-lg text-xs font-semibold outline-none focus:border-purple-500">
                         </div>
                         <div>
-                            <label class="text-[10px] font-bold text-slate-500 uppercase">Tên đơn vị / Trường (Dòng 2)</label>
-                            <input type="text" id="cv7991-school2" value="Trường TH-THCS-THPT Lê Thánh Tông" oninput="updateCV7991Preview()" class="w-full p-2 border rounded-lg text-xs font-semibold outline-none focus:border-purple-500">
+                            <label class="text-[10px] font-bold text-slate-500 uppercase">Trường / Tổ chuyên môn (Dòng 2)</label>
+                            <input type="text" id="cv7991-school2" value="Trường TH - THCS - THPT Thanh Bình" oninput="updateCV7991Preview()" class="w-full p-2 border rounded-lg text-xs font-semibold outline-none focus:border-purple-500">
                         </div>
                         <div>
                             <label class="text-[10px] font-bold text-slate-500 uppercase">Tiêu đề kỳ thi</label>
@@ -1894,8 +1894,8 @@
 
         function getCV7991Meta() {
             return {
-                school1: document.getElementById('cv7991-school1')?.value.trim() || 'Trường THCS-THPT Nguyễn Khuyến',
-                school2: document.getElementById('cv7991-school2')?.value.trim() || 'Trường TH-THCS-THPT Lê Thánh Tông',
+                school1: document.getElementById('cv7991-school1')?.value.trim() || 'SỞ GIÁO DỤC VÀ ĐÀO TẠO TP. HỒ CHÍ MINH',
+                school2: document.getElementById('cv7991-school2')?.value.trim() || 'Trường TH - THCS - THPT Thanh Bình',
                 title: document.getElementById('cv7991-title')?.value.trim() || 'ĐỀ KIỂM TRA ĐỊNH KÌ NH 2026-2027',
                 subject: document.getElementById('cv7991-subject')?.value.trim() || 'Toán',
                 grade: document.getElementById('cv7991-grade')?.value.trim() || '12',
